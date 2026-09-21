@@ -1,42 +1,129 @@
-name: Infrastructure Pipeline
+name: infra
+
+# Dépôt infra : Gitleaks -> Checkov/tfsec -> terraform plan (revue) -> apply (validation manuelle)
+# Déclenché aussi par le dépôt applicatif (repository_dispatch) après le push ECR.
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Tag des images ECR (SHA du commit applicatif)"
+        required: true
+  repository_dispatch:
+    types: [deploy]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infra-prod
+  cancel-in-progress: false
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: eu-west-1
+  AWS_REGION: eu-west-3
+  TF_VERSION: 1.10.5
+  TF_IN_AUTOMATION: "true"
+  # Variables Terraform depuis les variables du dépôt GitHub
+  TF_VAR_image_tag: ${{ github.event.inputs.image_tag || github.event.client_payload.image_tag || vars.IMAGE_TAG }}
+  TF_VAR_hosted_zone_name: ${{ vars.HOSTED_ZONE_NAME }}
+  TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
+  TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}
+  TF_VAR_tf_state_bucket: ${{ vars.TF_STATE_BUCKET }}
+  TF_VAR_github_repositories: ${{ vars.GITHUB_REPOSITORIES }}
 
 jobs:
-  terraform:
-    name: Terraform Validate & Plan
+  gitleaks:
+    name: Gitleaks — secrets
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Format
-        run: terraform fmt -check -recursive
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Checkov security scan
-        uses: bridgecrewio/checkov-action@v12
+  iac-scan:
+    name: Checkov · tfsec — scan Terraform
+    needs: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - name: terraform fmt / validate
+        run: |
+          terraform fmt -check -recursive
+          terraform init -backend=false -input=false
+          terraform validate
+      - uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
-          soft_fail: true
+          config_file: .checkov.yaml
+      - uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: .
 
-      - name: Terraform Plan
-        run: terraform plan
+  plan:
+    name: Terraform plan — revue humaine
+    needs: iac-scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+      - run: terraform init -input=false
+      - run: terraform plan -input=false -lock-timeout=5m -out=tfplan
+      - name: Résumé du plan
+        run: |
+          {
+            echo '### Terraform plan'
+            echo '```'
+            terraform show -no-color tfplan | tail -n 200
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: tfplan
+          path: tfplan
+          retention-days: 5
+
+  apply:
+    name: terraform apply — validation manuelle
+    needs: plan
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production   # reviewers obligatoires = validation manuelle
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform init -input=false
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+      - run: terraform apply -input=false -lock-timeout=5m tfplan

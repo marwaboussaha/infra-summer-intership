@@ -1,0 +1,101 @@
+# À placer dans le dépôt APPLICATIF : .github/workflows/app.yml
+# Gitleaks -> SonarQube -> Snyk -> Build Docker (4 images) -> Trivy -> Push ECR (tag SHA)
+# puis déclenche le workflow "infra" (terraform plan -> apply manuel) avec le nouveau tag.
+name: app
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: eu-west-3
+  ECR_PREFIX: voicecraft-prod
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sonarqube:
+    needs: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      - uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
+  snyk:
+    needs: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-projects --severity-threshold=high
+
+  build:
+    needs: [sonarqube, snyk]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        image: [frontend, backend, sandbox, worker]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build
+        run: |
+          IMAGE=${{ steps.ecr.outputs.registry }}/${ECR_PREFIX}-${{ matrix.image }}:${{ github.sha }}
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          docker build -t "$IMAGE" ./${{ matrix.image }}
+      - name: Trivy — CVE
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+      - run: docker push "$IMAGE"
+
+  trigger-infra:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # INFRA_DISPATCH_TOKEN : token (GitHub App ou PAT fine-grained) avec
+      # "Contents: read & write" sur le dépôt infra
+      - uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
+          repository: ${{ vars.INFRA_REPOSITORY }}
+          event-type: deploy
+          client-payload: '{"image_tag": "${{ github.sha }}"}'

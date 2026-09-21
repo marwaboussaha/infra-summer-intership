@@ -1,0 +1,23 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Variables locales (la CI utilise TF_VAR_*)
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+
+# Divers
+.DS_Store
+.idea/
+.vscode/
+# Le fichier .terraform.lock.hcl DOIT être commité

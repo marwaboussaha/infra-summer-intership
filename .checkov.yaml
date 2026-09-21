@@ -1,0 +1,7 @@
+framework:
+  - terraform
+  - github_actions
+download-external-modules: false
+skip-check:
+  - CKV_AWS_260  # ALB : port 80 ouvert uniquement pour la redirection 301 vers 443
+  - CKV_AWS_382  # Backend : egress 443 vers Internet requis (API Groq via NAT)

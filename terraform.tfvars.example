@@ -1,0 +1,8 @@
+hosted_zone_name    = "voicecraft.fr"
+domain_name         = "app.voicecraft.fr"
+alert_email         = "ops@voicecraft.fr"
+tf_state_bucket     = "CHANGE-ME-voicecraft-tfstate"
+github_repositories = ["mon-org/voicecraft-infra", "mon-org/voicecraft-app"]
+
+# Remplacé par la CI
+image_tag = "bootstrap"
