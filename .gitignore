@@ -23,3 +23,5 @@ override.tf.json
 # Le fichier .terraform.lock.hcl DOIT être commité
 
 checkov-results/
+
+checkov-results/
