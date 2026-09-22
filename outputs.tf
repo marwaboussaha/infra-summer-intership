@@ -1,5 +1,5 @@
 output "app_url" {
-  value = "https://${var.domain_name}"
+  value = "http://${module.alb.dns_name}"
 }
 
 output "alb_dns_name" {

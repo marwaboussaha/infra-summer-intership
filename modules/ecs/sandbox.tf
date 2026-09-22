@@ -13,6 +13,11 @@ resource "aws_ecs_task_definition" "sandbox" {
     cpu_architecture        = var.cpu_architecture
   }
 
+  # tmpfs n'est pas supporté sur Fargate : volume éphémère à la place
+  volume {
+    name = "tmp"
+  }
+
   container_definitions = jsonencode([{
     name                   = "sandbox"
     image                  = local.image["sandbox"]
@@ -20,9 +25,9 @@ resource "aws_ecs_task_definition" "sandbox" {
     readonlyRootFilesystem = true
     user                   = "1000:1000"
     portMappings           = [{ containerPort = var.sandbox_port, protocol = "tcp" }]
+    mountPoints            = [{ sourceVolume = "tmp", containerPath = "/tmp", readOnly = false }]
     linuxParameters = {
       capabilities = { drop = ["ALL"] }
-      tmpfs        = [{ containerPath = "/tmp", size = 256 }]
     }
     logConfiguration = local.log_config["sandbox"]
   }])

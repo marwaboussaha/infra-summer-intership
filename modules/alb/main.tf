@@ -1,4 +1,5 @@
-# Shield Standard protège automatiquement l'ALB (aucune ressource nécessaire)
+# ALB public en HTTP (sans nom de domaine ni certificat)
+# Accès : http://<dns_name de l'ALB>   -  Shield Standard protège automatiquement l'ALB
 resource "aws_lb" "this" {
   name                       = "${var.name}-alb"
   load_balancer_type         = "application"
@@ -49,13 +50,11 @@ resource "aws_lb_target_group" "backend" {
   }
 }
 
-# « / » -> frontend
-resource "aws_lb_listener" "https" {
+# Port 80 : « / » -> frontend
+resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = var.ssl_policy
-  certificate_arn   = var.certificate_arn
+  port              = 80
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
@@ -65,7 +64,7 @@ resource "aws_lb_listener" "https" {
 
 # « /api/* » -> backend
 resource "aws_lb_listener_rule" "api" {
-  listener_arn = aws_lb_listener.https.arn
+  listener_arn = aws_lb_listener.http.arn
   priority     = 10
 
   action {
@@ -76,21 +75,6 @@ resource "aws_lb_listener_rule" "api" {
   condition {
     path_pattern {
       values = ["/api/*"]
-    }
-  }
-}
-
-resource "aws_lb_listener" "http_redirect" {
-  load_balancer_arn = aws_lb.this.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
     }
   }
 }

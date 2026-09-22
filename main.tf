@@ -73,19 +73,7 @@ module "logging" {
 # ============================================================
 # Exposition : DNS, certificat, ALB, WAF
 # ============================================================
-module "dns" {
-  source           = "./modules/dns"
-  hosted_zone_name = var.hosted_zone_name
-  domain_name      = var.domain_name
-  alb_dns_name     = module.alb.dns_name
-  alb_zone_id      = module.alb.zone_id
-}
 
-module "acm" {
-  source      = "./modules/acm"
-  domain_name = var.domain_name
-  zone_id     = module.dns.zone_id
-}
 
 module "alb" {
   source              = "./modules/alb"
@@ -93,12 +81,9 @@ module "alb" {
   vpc_id              = module.vpc.vpc_id
   public_subnet_ids   = module.vpc.public_subnet_ids
   alb_sg_id           = module.vpc.alb_sg_id
-  certificate_arn     = module.acm.certificate_arn
   logs_bucket         = module.logging.bucket_id
-  ssl_policy          = var.alb_ssl_policy
   backend_health_path = var.backend_health_path
 }
-
 module "waf" {
   source          = "./modules/waf"
   name            = local.name
