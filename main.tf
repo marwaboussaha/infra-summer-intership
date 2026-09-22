@@ -14,7 +14,7 @@ terraform {
 
   # Bucket d'état créé une seule fois à la main (voir README)
   backend "s3" {
-    bucket       = "CHANGE-ME-voicecraft-tfstate"
+    bucket       = "voicecraft-tfstate-636361171302"
     key          = "prod/terraform.tfstate"
     region       = "eu-west-3"
     encrypt      = true
