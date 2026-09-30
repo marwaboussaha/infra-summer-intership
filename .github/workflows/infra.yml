@@ -3,7 +3,8 @@ name: VoiceCraft Infrastructure
 # Developer -> VS Code -> push -> GitHub Repo -> GitHub Actions
 #   1. Security checks : Gitleaks, Checkov, tfsec -> Email security scan results
 #   2. Terraform       : setup, fmt check, init, validate, plan -> Email plan output
-#   3. Apply           : trigger terraform apply manually (environment "production")
+#   3. Apply           : NEVER automatic. Triggered manually from the Actions tab
+#                        (Run workflow + "apply" checked), then approved in "production"
 
 on:
   push:
@@ -12,6 +13,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      apply:
+        description: "Apply the Terraform plan (manual deployment)"
+        type: boolean
+        default: false
       image_tag:
         description: "ECR image tag (empty = IMAGE_TAG variable)"
         required: false
@@ -253,29 +258,34 @@ jobs:
           secure: true
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Terraform Plan - ${{ github.repository }} (${{ steps.plan.outputs.exitcode == '2' && 'Changes detected' || 'No changes' }})"
+          subject: "Terraform Plan - ${{ github.repository }} (${{ steps.plan.outputs.exitcode == '2' && 'Changes detected - approval required' || 'No changes' }})"
           to: ${{ secrets.MAIL_TO }}
           from: GitHub Actions <${{ secrets.SMTP_USERNAME }}>
           body: |
             Terraform plan completed for commit ${{ github.sha }}.
             Exit code: ${{ steps.plan.outputs.exitcode }} (0 = no changes, 2 = changes detected)
 
-            To approve and apply, go to:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            1. Review the attached plan-output.txt (check the "to destroy" count).
+            2. To deploy, trigger the apply MANUALLY:
+               ${{ github.server_url }}/${{ github.repository }}/actions/workflows/infra.yml
+               -> "Run workflow" -> branch main -> check "apply" -> "Run workflow".
+            3. When the new run reaches the "Terraform apply" job,
+               click "Review deployments" -> "production" -> "Approve and deploy".
 
-            Then approve the deployment directly from the workflow run in the Actions tab.
+            Nothing is deployed until these steps are done.
 
-            Plan output is attached.
+            Plan run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           attachments: plan-output.txt
 
 
-  # --- 3. Terraform apply (manual trigger) -----------------------------------
+  # --- 3. Terraform apply (manual trigger + approval) ------------------------
   apply:
-    name: Terraform apply (manual approval)
+    name: Terraform apply (manual trigger + approval)
     runs-on: ubuntu-latest
     needs: [validate-and-plan]
-    # Only on main, and only when the plan detected changes
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.validate-and-plan.outputs.plan_exitcode == '2'
+    # Never on push: only "Run workflow" with "apply" checked, on main,
+    # and only when the plan of this run detected changes
+    if: github.event_name == 'workflow_dispatch' && inputs.apply && github.ref == 'refs/heads/main' && needs.validate-and-plan.outputs.plan_exitcode == '2'
     environment: production # required reviewers = manual approval
 
     permissions:

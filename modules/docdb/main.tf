@@ -39,9 +39,17 @@ resource "aws_docdb_cluster" "this" {
 
   enabled_cloudwatch_logs_exports = ["audit", "profiler"]
 
-  deletion_protection       = var.deletion_protection
+  deletion_protection = var.deletion_protection
+
+  # Snapshot final horodaté : un nom fixe empêcherait toute seconde destruction
+  # (DBClusterSnapshotAlreadyExistsFault). Mettre skip_final_snapshot = true
+  # uniquement pour un environnement jetable.
   skip_final_snapshot       = false
-  final_snapshot_identifier = "${var.name}-docdb-final"
+  final_snapshot_identifier = "${var.name}-docdb-final-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+
+  lifecycle {
+    ignore_changes = [final_snapshot_identifier]
+  }
 }
 
 # Instance 0 = primaire (AZ A), instance 1 = réplica de lecture (AZ B)
