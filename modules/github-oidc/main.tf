@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "assume" {
 resource "aws_iam_role" "github_deploy" {
   name                 = "${var.name}-github-deploy"
   assume_role_policy   = data.aws_iam_policy_document.assume.json
-  max_session_duration = 3600
+  max_session_duration = 7200
 }
 
 data "aws_iam_policy_document" "deploy" {
