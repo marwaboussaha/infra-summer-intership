@@ -1,0 +1,3958 @@
+﻿module.acm.data.aws_route53_zone.this: Reading...
+data.aws_caller_identity.current: Reading...
+module.dns.aws_route53_zone.this[0]: Refreshing state... [id=Z02840762DPHP6O2PCXFK]
+module.logging.data.aws_elb_service_account.this: Reading...
+module.github_oidc.aws_iam_openid_connect_provider.github[0]: Refreshing state... [id=arn:aws:iam::636361171302:oidc-provider/token.actions.githubusercontent.com]
+module.logging.data.aws_elb_service_account.this: Read complete after 0s [id=009996457667]
+data.aws_caller_identity.current: Read complete after 0s [id=636361171302]
+module.ecs.data.aws_iam_policy_document.ecs_tasks_assume: Reading...
+module.kms.data.aws_iam_policy_document.this: Reading...
+module.ecs.data.aws_iam_policy_document.ecs_tasks_assume: Read complete after 0s [id=3828832641]
+module.kms.data.aws_iam_policy_document.this: Read complete after 0s [id=2674036073]
+module.kms.aws_kms_key.this: Refreshing state... [id=02ce681f-c173-4cb2-8ce6-f876bedcf6d2]
+module.github_oidc.data.aws_iam_policy_document.assume: Reading...
+module.github_oidc.data.aws_iam_policy_document.assume: Read complete after 0s [id=479704693]
+module.github_oidc.aws_iam_role.github_deploy: Refreshing state... [id=voicecraft-prod-github-deploy]
+module.ecr.aws_ecr_repository.this["frontend"]: Refreshing state... [id=voicecraft-prod-frontend]
+module.ecr.aws_ecr_repository.this["sandbox"]: Refreshing state... [id=voicecraft-prod-sandbox]
+module.ecr.aws_ecr_repository.this["backend"]: Refreshing state... [id=voicecraft-prod-backend]
+module.acm.data.aws_route53_zone.this: Read complete after 1s [id=Z02840762DPHP6O2PCXFK]
+module.github_oidc.data.aws_iam_policy_document.deploy: Reading...
+module.github_oidc.data.aws_iam_policy_document.deploy: Read complete after 0s [id=1450964745]
+module.github_oidc.aws_iam_role_policy_attachment.extra["arn:aws:iam::aws:policy/AdministratorAccess"]: Refreshing state... [id=voicecraft-prod-github-deploy/arn:aws:iam::aws:policy/AdministratorAccess]
+module.github_oidc.aws_iam_role_policy.deploy: Refreshing state... [id=voicecraft-prod-github-deploy:ecr-push-and-state]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.acm.aws_acm_certificate.this will be created
+  + resource "aws_acm_certificate" "this" {
+      + arn                       = (known after apply)
+      + domain_name               = "app.voicecraft-plateform.website"
+      + domain_validation_options = [
+          + {
+              + domain_name           = "app.voicecraft-plateform.website"
+              + resource_record_name  = (known after apply)
+              + resource_record_type  = (known after apply)
+              + resource_record_value = (known after apply)
+            },
+          + {
+              + domain_name           = "voicecraft-plateform.website"
+              + resource_record_name  = (known after apply)
+              + resource_record_type  = (known after apply)
+              + resource_record_value = (known after apply)
+            },
+        ]
+      + id                        = (known after apply)
+      + key_algorithm             = "RSA_2048"
+      + not_after                 = (known after apply)
+      + not_before                = (known after apply)
+      + pending_renewal           = (known after apply)
+      + private_key_wo            = (write-only attribute)
+      + region                    = "eu-west-3"
+      + renewal_eligibility       = (known after apply)
+      + renewal_summary           = (known after apply)
+      + status                    = (known after apply)
+      + subject_alternative_names = [
+          + "app.voicecraft-plateform.website",
+          + "voicecraft-plateform.website",
+        ]
+      + tags                      = {
+          + "Name" = "app.voicecraft-plateform.website"
+        }
+      + tags_all                  = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "app.voicecraft-plateform.website"
+          + "Project"     = "voicecraft"
+        }
+      + type                      = (known after apply)
+      + validation_emails         = (known after apply)
+      + validation_method         = "DNS"
+
+      + options {
+          + certificate_transparency_logging_preference = "ENABLED"
+          + export                                      = (known after apply)
+        }
+    }
+
+  # module.acm.aws_acm_certificate_validation.this will be created
+  + resource "aws_acm_certificate_validation" "this" {
+      + certificate_arn         = (known after apply)
+      + id                      = (known after apply)
+      + region                  = "eu-west-3"
+      + validation_record_fqdns = (known after apply)
+
+      + timeouts {
+          + create = "45m"
+        }
+    }
+
+  # module.acm.aws_route53_record.validation["app.voicecraft-plateform.website"] will be created
+  + resource "aws_route53_record" "validation" {
+      + allow_overwrite = true
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+      + records         = (known after apply)
+      + ttl             = 60
+      + type            = (known after apply)
+      + zone_id         = "Z02840762DPHP6O2PCXFK"
+    }
+
+  # module.acm.aws_route53_record.validation["voicecraft-plateform.website"] will be created
+  + resource "aws_route53_record" "validation" {
+      + allow_overwrite = true
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+      + records         = (known after apply)
+      + ttl             = 60
+      + type            = (known after apply)
+      + zone_id         = "Z02840762DPHP6O2PCXFK"
+    }
+
+  # module.alb.aws_lb.this will be created
+  + resource "aws_lb" "this" {
+      + arn                                                          = (known after apply)
+      + arn_suffix                                                   = (known after apply)
+      + client_keep_alive                                            = 3600
+      + desync_mitigation_mode                                       = "defensive"
+      + dns_name                                                     = (known after apply)
+      + drop_invalid_header_fields                                   = true
+      + enable_deletion_protection                                   = true
+      + enable_http2                                                 = true
+      + enable_prefix_for_ipv6_source_nat                            = (known after apply)
+      + enable_tls_version_and_cipher_suite_headers                  = false
+      + enable_waf_fail_open                                         = false
+      + enable_xff_client_port                                       = false
+      + enable_zonal_shift                                           = false
+      + enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      + id                                                           = (known after apply)
+      + idle_timeout                                                 = 60
+      + internal                                                     = false
+      + ip_address_type                                              = (known after apply)
+      + load_balancer_type                                           = "application"
+      + name                                                         = "voicecraft-prod-alb"
+      + name_prefix                                                  = (known after apply)
+      + preserve_host_header                                         = false
+      + region                                                       = "eu-west-3"
+      + secondary_ips_auto_assigned_per_subnet                       = (known after apply)
+      + security_groups                                              = (known after apply)
+      + subnets                                                      = (known after apply)
+      + tags_all                                                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                                                       = (known after apply)
+      + xff_header_processing_mode                                   = "append"
+      + zone_id                                                      = (known after apply)
+
+      + access_logs {
+          + bucket  = (known after apply)
+          + enabled = true
+          + prefix  = "alb"
+        }
+
+      + subnet_mapping (known after apply)
+    }
+
+  # module.alb.aws_lb_listener.https will be created
+  + resource "aws_lb_listener" "https" {
+      + arn                                                                   = (known after apply)
+      + certificate_arn                                                       = (known after apply)
+      + id                                                                    = (known after apply)
+      + load_balancer_arn                                                     = (known after apply)
+      + port                                                                  = 443
+      + protocol                                                              = "HTTPS"
+      + region                                                                = "eu-west-3"
+      + routing_http_request_x_amzn_mtls_clientcert_header_name               = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = (known after apply)
+      + routing_http_request_x_amzn_tls_cipher_suite_header_name              = (known after apply)
+      + routing_http_request_x_amzn_tls_version_header_name                   = (known after apply)
+      + routing_http_response_access_control_allow_credentials_header_value   = (known after apply)
+      + routing_http_response_access_control_allow_headers_header_value       = (known after apply)
+      + routing_http_response_access_control_allow_methods_header_value       = (known after apply)
+      + routing_http_response_access_control_allow_origin_header_value        = (known after apply)
+      + routing_http_response_access_control_expose_headers_header_value      = (known after apply)
+      + routing_http_response_access_control_max_age_header_value             = (known after apply)
+      + routing_http_response_content_security_policy_header_value            = (known after apply)
+      + routing_http_response_server_enabled                                  = (known after apply)
+      + routing_http_response_strict_transport_security_header_value          = (known after apply)
+      + routing_http_response_x_content_type_options_header_value             = (known after apply)
+      + routing_http_response_x_frame_options_header_value                    = (known after apply)
+      + ssl_policy                                                            = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+      + tags_all                                                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + tcp_idle_timeout_seconds                                              = (known after apply)
+
+      + default_action {
+          + order            = (known after apply)
+          + target_group_arn = (known after apply)
+          + type             = "forward"
+        }
+
+      + mutual_authentication (known after apply)
+    }
+
+  # module.alb.aws_lb_listener_rule.api will be created
+  + resource "aws_lb_listener_rule" "api" {
+      + arn          = (known after apply)
+      + id           = (known after apply)
+      + listener_arn = (known after apply)
+      + priority     = 10
+      + region       = "eu-west-3"
+      + tags_all     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + action {
+          + order            = (known after apply)
+          + target_group_arn = (known after apply)
+          + type             = "forward"
+        }
+
+      + condition {
+          + path_pattern {
+              + regex_values = []
+              + values       = [
+                  + "/api/*",
+                ]
+            }
+        }
+    }
+
+  # module.alb.aws_lb_target_group.backend will be created
+  + resource "aws_lb_target_group" "backend" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = (known after apply)
+      + deregistration_delay               = "30"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancer_arns                 = (known after apply)
+      + load_balancing_algorithm_type      = (known after apply)
+      + load_balancing_anomaly_mitigation  = (known after apply)
+      + load_balancing_cross_zone_enabled  = (known after apply)
+      + name                               = "voicecraft-prod-backend"
+      + name_prefix                        = (known after apply)
+      + port                               = 3000
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + region                             = "eu-west-3"
+      + slow_start                         = 0
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + target_type                        = "ip"
+      + vpc_id                             = (known after apply)
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 2
+          + interval            = 15
+          + matcher             = "200"
+          + path                = "/api/health"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = (known after apply)
+          + unhealthy_threshold = 3
+        }
+
+      + stickiness (known after apply)
+
+      + target_failover (known after apply)
+
+      + target_group_health (known after apply)
+
+      + target_health_state (known after apply)
+    }
+
+  # module.alb.aws_lb_target_group.frontend will be created
+  + resource "aws_lb_target_group" "frontend" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = (known after apply)
+      + deregistration_delay               = "30"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancer_arns                 = (known after apply)
+      + load_balancing_algorithm_type      = (known after apply)
+      + load_balancing_anomaly_mitigation  = (known after apply)
+      + load_balancing_cross_zone_enabled  = (known after apply)
+      + name                               = "voicecraft-prod-frontend"
+      + name_prefix                        = (known after apply)
+      + port                               = 8080
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + region                             = "eu-west-3"
+      + slow_start                         = 0
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + target_type                        = "ip"
+      + vpc_id                             = (known after apply)
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 2
+          + interval            = 15
+          + matcher             = "200"
+          + path                = "/"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = (known after apply)
+          + unhealthy_threshold = 3
+        }
+
+      + stickiness (known after apply)
+
+      + target_failover (known after apply)
+
+      + target_group_health (known after apply)
+
+      + target_health_state (known after apply)
+    }
+
+  # module.backup.aws_backup_plan.this will be created
+  + resource "aws_backup_plan" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "voicecraft-prod-daily"
+      + region   = "eu-west-3"
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + version  = (known after apply)
+
+      + rule {
+          + completion_window                            = 180
+          + enable_continuous_backup                     = false
+          + rule_name                                    = "daily-35d"
+          + schedule                                     = "cron(0 3 * * ? *)"
+          + schedule_expression_timezone                 = "Etc/UTC"
+          + start_window                                 = 60
+          + target_vault_name                            = "voicecraft-prod-vault"
+            # (1 unchanged attribute hidden)
+
+          + lifecycle {
+              + delete_after                              = 35
+              + opt_in_to_archive_for_supported_resources = (known after apply)
+            }
+        }
+    }
+
+  # module.backup.aws_backup_selection.this will be created
+  + resource "aws_backup_selection" "this" {
+      + iam_role_arn  = (known after apply)
+      + id            = (known after apply)
+      + name          = "voicecraft-prod-selection"
+      + not_resources = (known after apply)
+      + plan_id       = (known after apply)
+      + region        = "eu-west-3"
+      + resources     = (known after apply)
+
+      + condition (known after apply)
+    }
+
+  # module.backup.aws_backup_vault.this will be created
+  + resource "aws_backup_vault" "this" {
+      + arn             = (known after apply)
+      + force_destroy   = false
+      + id              = (known after apply)
+      + kms_key_arn     = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + name            = "voicecraft-prod-vault"
+      + recovery_points = (known after apply)
+      + region          = "eu-west-3"
+      + tags_all        = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.backup.aws_iam_role.backup will be created
+  + resource "aws_iam_role" "backup" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "backup.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "voicecraft-prod-backup"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.backup.aws_iam_role_policy_attachment.backup["arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"] will be created
+  + resource "aws_iam_role_policy_attachment" "backup" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+      + role       = "voicecraft-prod-backup"
+    }
+
+  # module.backup.aws_iam_role_policy_attachment.backup["arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"] will be created
+  + resource "aws_iam_role_policy_attachment" "backup" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
+      + role       = "voicecraft-prod-backup"
+    }
+
+  # module.dns.aws_route53_record.app["app.voicecraft-plateform.website"] will be created
+  + resource "aws_route53_record" "app" {
+      + allow_overwrite = (known after apply)
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = "app.voicecraft-plateform.website"
+      + type            = "A"
+      + zone_id         = "Z02840762DPHP6O2PCXFK"
+
+      + alias {
+          + evaluate_target_health = true
+          + name                   = (known after apply)
+          + zone_id                = (known after apply)
+        }
+    }
+
+  # module.dns.aws_route53_record.app["voicecraft-plateform.website"] will be created
+  + resource "aws_route53_record" "app" {
+      + allow_overwrite = (known after apply)
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = "voicecraft-plateform.website"
+      + type            = "A"
+      + zone_id         = "Z02840762DPHP6O2PCXFK"
+
+      + alias {
+          + evaluate_target_health = true
+          + name                   = (known after apply)
+          + zone_id                = (known after apply)
+        }
+    }
+
+  # module.dns.aws_route53_record.caa[0] will be created
+  + resource "aws_route53_record" "caa" {
+      + allow_overwrite = (known after apply)
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = "voicecraft-plateform.website"
+      + records         = [
+          + "0 issue \"amazon.com\"",
+          + "0 issuewild \"amazon.com\"",
+        ]
+      + ttl             = 300
+      + type            = "CAA"
+      + zone_id         = "Z02840762DPHP6O2PCXFK"
+    }
+
+  # module.docdb.aws_docdb_cluster.this will be created
+  + resource "aws_docdb_cluster" "this" {
+      + arn                             = (known after apply)
+      + availability_zones              = (known after apply)
+      + backup_retention_period         = 7
+      + cluster_identifier              = "voicecraft-prod-docdb"
+      + cluster_identifier_prefix       = (known after apply)
+      + cluster_members                 = (known after apply)
+      + cluster_resource_id             = (known after apply)
+      + db_cluster_parameter_group_name = "voicecraft-prod-docdb5"
+      + db_subnet_group_name            = "voicecraft-prod-docdb"
+      + deletion_protection             = true
+      + enabled_cloudwatch_logs_exports = [
+          + "audit",
+          + "profiler",
+        ]
+      + endpoint                        = (known after apply)
+      + engine                          = "docdb"
+      + engine_version                  = "5.0.0"
+      + final_snapshot_identifier       = (known after apply)
+      + hosted_zone_id                  = (known after apply)
+      + id                              = (known after apply)
+      + kms_key_id                      = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + manage_master_user_password     = true
+      + master_password_wo              = (write-only attribute)
+      + master_user_secret              = (known after apply)
+      + master_username                 = "voicecraft_admin"
+      + network_type                    = (known after apply)
+      + port                            = 27017
+      + preferred_backup_window         = "02:00-03:00"
+      + preferred_maintenance_window    = "sun:03:30-sun:04:30"
+      + reader_endpoint                 = (known after apply)
+      + region                          = "eu-west-3"
+      + skip_final_snapshot             = false
+      + storage_encrypted               = true
+      + tags_all                        = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_security_group_ids          = (known after apply)
+    }
+
+  # module.docdb.aws_docdb_cluster_instance.this[0] will be created
+  + resource "aws_docdb_cluster_instance" "this" {
+      + arn                             = (known after apply)
+      + auto_minor_version_upgrade      = true
+      + availability_zone               = "eu-west-3a"
+      + ca_cert_identifier              = (known after apply)
+      + cluster_identifier              = (known after apply)
+      + db_subnet_group_name            = (known after apply)
+      + dbi_resource_id                 = (known after apply)
+      + endpoint                        = (known after apply)
+      + engine                          = "docdb"
+      + engine_version                  = (known after apply)
+      + id                              = (known after apply)
+      + identifier                      = "voicecraft-prod-docdb-0"
+      + identifier_prefix               = (known after apply)
+      + instance_class                  = "db.t4g.medium"
+      + kms_key_id                      = (known after apply)
+      + performance_insights_kms_key_id = (known after apply)
+      + port                            = (known after apply)
+      + preferred_backup_window         = (known after apply)
+      + preferred_maintenance_window    = (known after apply)
+      + promotion_tier                  = 0
+      + publicly_accessible             = (known after apply)
+      + region                          = "eu-west-3"
+      + storage_encrypted               = (known after apply)
+      + tags_all                        = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + writer                          = (known after apply)
+    }
+
+  # module.docdb.aws_docdb_cluster_instance.this[1] will be created
+  + resource "aws_docdb_cluster_instance" "this" {
+      + arn                             = (known after apply)
+      + auto_minor_version_upgrade      = true
+      + availability_zone               = "eu-west-3b"
+      + ca_cert_identifier              = (known after apply)
+      + cluster_identifier              = (known after apply)
+      + db_subnet_group_name            = (known after apply)
+      + dbi_resource_id                 = (known after apply)
+      + endpoint                        = (known after apply)
+      + engine                          = "docdb"
+      + engine_version                  = (known after apply)
+      + id                              = (known after apply)
+      + identifier                      = "voicecraft-prod-docdb-1"
+      + identifier_prefix               = (known after apply)
+      + instance_class                  = "db.t4g.medium"
+      + kms_key_id                      = (known after apply)
+      + performance_insights_kms_key_id = (known after apply)
+      + port                            = (known after apply)
+      + preferred_backup_window         = (known after apply)
+      + preferred_maintenance_window    = (known after apply)
+      + promotion_tier                  = 1
+      + publicly_accessible             = (known after apply)
+      + region                          = "eu-west-3"
+      + storage_encrypted               = (known after apply)
+      + tags_all                        = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + writer                          = (known after apply)
+    }
+
+  # module.docdb.aws_docdb_cluster_parameter_group.this will be created
+  + resource "aws_docdb_cluster_parameter_group" "this" {
+      + arn         = (known after apply)
+      + description = "Managed by Terraform"
+      + family      = "docdb5.0"
+      + id          = (known after apply)
+      + name        = "voicecraft-prod-docdb5"
+      + name_prefix = (known after apply)
+      + region      = "eu-west-3"
+      + tags_all    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + parameter {
+          + apply_method = "pending-reboot"
+          + name         = "audit_logs"
+          + value        = "enabled"
+        }
+      + parameter {
+          + apply_method = "pending-reboot"
+          + name         = "tls"
+          + value        = "enabled"
+        }
+    }
+
+  # module.docdb.aws_docdb_subnet_group.this will be created
+  + resource "aws_docdb_subnet_group" "this" {
+      + arn                     = (known after apply)
+      + description             = "Managed by Terraform"
+      + id                      = (known after apply)
+      + name                    = "voicecraft-prod-docdb"
+      + name_prefix             = (known after apply)
+      + region                  = "eu-west-3"
+      + subnet_ids              = (known after apply)
+      + supported_network_types = (known after apply)
+      + tags_all                = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.ecr.aws_ecr_lifecycle_policy.this["backend"] will be created
+  + resource "aws_ecr_lifecycle_policy" "this" {
+      + id          = (known after apply)
+      + policy      = jsonencode(
+            {
+              + rules = [
+                  + {
+                      + action       = {
+                          + type = "expire"
+                        }
+                      + description  = "Garder les 30 dernieres images"
+                      + rulePriority = 1
+                      + selection    = {
+                          + countNumber = 30
+                          + countType   = "imageCountMoreThan"
+                          + tagStatus   = "any"
+                        }
+                    },
+                ]
+            }
+        )
+      + region      = "eu-west-3"
+      + registry_id = (known after apply)
+      + repository  = "voicecraft-prod-backend"
+    }
+
+  # module.ecr.aws_ecr_lifecycle_policy.this["frontend"] will be created
+  + resource "aws_ecr_lifecycle_policy" "this" {
+      + id          = (known after apply)
+      + policy      = jsonencode(
+            {
+              + rules = [
+                  + {
+                      + action       = {
+                          + type = "expire"
+                        }
+                      + description  = "Garder les 30 dernieres images"
+                      + rulePriority = 1
+                      + selection    = {
+                          + countNumber = 30
+                          + countType   = "imageCountMoreThan"
+                          + tagStatus   = "any"
+                        }
+                    },
+                ]
+            }
+        )
+      + region      = "eu-west-3"
+      + registry_id = (known after apply)
+      + repository  = "voicecraft-prod-frontend"
+    }
+
+  # module.ecr.aws_ecr_lifecycle_policy.this["sandbox"] will be created
+  + resource "aws_ecr_lifecycle_policy" "this" {
+      + id          = (known after apply)
+      + policy      = jsonencode(
+            {
+              + rules = [
+                  + {
+                      + action       = {
+                          + type = "expire"
+                        }
+                      + description  = "Garder les 30 dernieres images"
+                      + rulePriority = 1
+                      + selection    = {
+                          + countNumber = 30
+                          + countType   = "imageCountMoreThan"
+                          + tagStatus   = "any"
+                        }
+                    },
+                ]
+            }
+        )
+      + region      = "eu-west-3"
+      + registry_id = (known after apply)
+      + repository  = "voicecraft-prod-sandbox"
+    }
+
+  # module.ecs.data.aws_iam_policy_document.backend_task will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "backend_task" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "ecs:RunTask",
+            ]
+          + resources = [
+              + "arn:aws:ecs:eu-west-3:636361171302:task-definition/voicecraft-prod-sandbox:*",
+            ]
+          + sid       = "RunSandboxOnly"
+
+          + condition {
+              + test     = "ArnEquals"
+              + values   = [
+                  + (known after apply),
+                ]
+              + variable = "ecs:cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ecs:DescribeTasks",
+              + "ecs:StopTask",
+            ]
+          + resources = [
+              + "arn:aws:ecs:eu-west-3:636361171302:task/voicecraft-prod-sandbox/*",
+            ]
+          + sid       = "ManageSandboxTasks"
+        }
+      + statement {
+          + actions   = [
+              + "ecs:TagResource",
+            ]
+          + resources = [
+              + "arn:aws:ecs:eu-west-3:636361171302:task/voicecraft-prod-sandbox/*",
+            ]
+          + sid       = "TagOnRunTask"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "RunTask",
+                ]
+              + variable = "ecs:CreateAction"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "iam:PassRole",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "PassExecutionRoleOnly"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "ecs-tasks.amazonaws.com",
+                ]
+              + variable = "iam:PassedToService"
+            }
+        }
+    }
+
+  # module.ecs.data.aws_iam_policy_document.execution_secrets will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "execution_secrets" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "ssm:GetParameters",
+            ]
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "secretsmanager:GetSecretValue",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "kms:Decrypt",
+            ]
+          + resources = [
+              + "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2",
+            ]
+        }
+    }
+
+  # module.ecs.aws_appautoscaling_policy.backend_cpu will be created
+  + resource "aws_appautoscaling_policy" "backend_cpu" {
+      + alarm_arns         = (known after apply)
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + name               = "voicecraft-prod-backend-cpu"
+      + policy_type        = "TargetTrackingScaling"
+      + region             = "eu-west-3"
+      + resource_id        = "service/voicecraft-prod-app/backend"
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+
+      + target_tracking_scaling_policy_configuration {
+          + disable_scale_in   = false
+          + scale_in_cooldown  = 120
+          + scale_out_cooldown = 60
+          + target_value       = 70
+
+          + predefined_metric_specification {
+              + predefined_metric_type = "ECSServiceAverageCPUUtilization"
+            }
+        }
+    }
+
+  # module.ecs.aws_appautoscaling_target.backend will be created
+  + resource "aws_appautoscaling_target" "backend" {
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + max_capacity       = 10
+      + min_capacity       = 2
+      + region             = "eu-west-3"
+      + resource_id        = "service/voicecraft-prod-app/backend"
+      + role_arn           = (known after apply)
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+      + tags_all           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + suspended_state (known after apply)
+    }
+
+  # module.ecs.aws_cloudwatch_log_group.this["backend"] will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn                         = (known after apply)
+      + deletion_protection_enabled = (known after apply)
+      + id                          = (known after apply)
+      + kms_key_id                  = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + log_group_class             = (known after apply)
+      + name                        = "/ecs/voicecraft-prod/backend"
+      + name_prefix                 = (known after apply)
+      + region                      = "eu-west-3"
+      + retention_in_days           = 90
+      + skip_destroy                = false
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.ecs.aws_cloudwatch_log_group.this["frontend"] will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn                         = (known after apply)
+      + deletion_protection_enabled = (known after apply)
+      + id                          = (known after apply)
+      + kms_key_id                  = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + log_group_class             = (known after apply)
+      + name                        = "/ecs/voicecraft-prod/frontend"
+      + name_prefix                 = (known after apply)
+      + region                      = "eu-west-3"
+      + retention_in_days           = 90
+      + skip_destroy                = false
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.ecs.aws_cloudwatch_log_group.this["sandbox"] will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn                         = (known after apply)
+      + deletion_protection_enabled = (known after apply)
+      + id                          = (known after apply)
+      + kms_key_id                  = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + log_group_class             = (known after apply)
+      + name                        = "/ecs/voicecraft-prod/sandbox"
+      + name_prefix                 = (known after apply)
+      + region                      = "eu-west-3"
+      + retention_in_days           = 90
+      + skip_destroy                = false
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.ecs.aws_ecs_cluster.app will be created
+  + resource "aws_ecs_cluster" "app" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "voicecraft-prod-app"
+      + region   = "eu-west-3"
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + setting {
+          + name  = "containerInsights"
+          + value = "enabled"
+        }
+    }
+
+  # module.ecs.aws_ecs_cluster.sandbox will be created
+  + resource "aws_ecs_cluster" "sandbox" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "voicecraft-prod-sandbox"
+      + region   = "eu-west-3"
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + setting {
+          + name  = "containerInsights"
+          + value = "enabled"
+        }
+    }
+
+  # module.ecs.aws_ecs_cluster_capacity_providers.app will be created
+  + resource "aws_ecs_cluster_capacity_providers" "app" {
+      + capacity_providers = [
+          + "FARGATE",
+        ]
+      + cluster_name       = "voicecraft-prod-app"
+      + id                 = (known after apply)
+      + region             = "eu-west-3"
+    }
+
+  # module.ecs.aws_ecs_cluster_capacity_providers.sandbox will be created
+  + resource "aws_ecs_cluster_capacity_providers" "sandbox" {
+      + capacity_providers = [
+          + "FARGATE",
+        ]
+      + cluster_name       = "voicecraft-prod-sandbox"
+      + id                 = (known after apply)
+      + region             = "eu-west-3"
+    }
+
+  # module.ecs.aws_ecs_service.backend will be created
+  + resource "aws_ecs_service" "backend" {
+      + arn                                = (known after apply)
+      + availability_zone_rebalancing      = (known after apply)
+      + cluster                            = (known after apply)
+      + deployment_maximum_percent         = 200
+      + deployment_minimum_healthy_percent = 100
+      + desired_count                      = 2
+      + enable_ecs_managed_tags            = false
+      + enable_execute_command             = false
+      + iam_role                           = (known after apply)
+      + id                                 = (known after apply)
+      + launch_type                        = "FARGATE"
+      + name                               = "backend"
+      + platform_version                   = "LATEST"
+      + propagate_tags                     = "SERVICE"
+      + region                             = "eu-west-3"
+      + scheduling_strategy                = "REPLICA"
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + task_definition                    = (known after apply)
+      + triggers                           = (known after apply)
+      + wait_for_steady_state              = false
+
+      + deployment_circuit_breaker {
+          + enable   = true
+          + rollback = true
+        }
+
+      + deployment_configuration (known after apply)
+
+      + load_balancer {
+          + container_name   = "backend"
+          + container_port   = 3000
+          + target_group_arn = (known after apply)
+            # (1 unchanged attribute hidden)
+        }
+
+      + network_configuration {
+          + assign_public_ip = false
+          + security_groups  = (known after apply)
+          + subnets          = (known after apply)
+        }
+    }
+
+  # module.ecs.aws_ecs_service.frontend will be created
+  + resource "aws_ecs_service" "frontend" {
+      + arn                                = (known after apply)
+      + availability_zone_rebalancing      = (known after apply)
+      + cluster                            = (known after apply)
+      + deployment_maximum_percent         = 200
+      + deployment_minimum_healthy_percent = 100
+      + desired_count                      = 2
+      + enable_ecs_managed_tags            = false
+      + enable_execute_command             = false
+      + iam_role                           = (known after apply)
+      + id                                 = (known after apply)
+      + launch_type                        = "FARGATE"
+      + name                               = "frontend"
+      + platform_version                   = "LATEST"
+      + propagate_tags                     = "SERVICE"
+      + region                             = "eu-west-3"
+      + scheduling_strategy                = "REPLICA"
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + task_definition                    = (known after apply)
+      + triggers                           = (known after apply)
+      + wait_for_steady_state              = false
+
+      + deployment_circuit_breaker {
+          + enable   = true
+          + rollback = true
+        }
+
+      + deployment_configuration (known after apply)
+
+      + load_balancer {
+          + container_name   = "frontend"
+          + container_port   = 8080
+          + target_group_arn = (known after apply)
+            # (1 unchanged attribute hidden)
+        }
+
+      + network_configuration {
+          + assign_public_ip = false
+          + security_groups  = (known after apply)
+          + subnets          = (known after apply)
+        }
+    }
+
+  # module.ecs.aws_ecs_task_definition.backend will be created
+  + resource "aws_ecs_task_definition" "backend" {
+      + arn                      = (known after apply)
+      + arn_without_revision     = (known after apply)
+      + container_definitions    = (known after apply)
+      + cpu                      = "512"
+      + enable_fault_injection   = (known after apply)
+      + execution_role_arn       = (known after apply)
+      + family                   = "voicecraft-prod-backend"
+      + id                       = (known after apply)
+      + memory                   = "1024"
+      + network_mode             = "awsvpc"
+      + region                   = "eu-west-3"
+      + requires_compatibilities = [
+          + "FARGATE",
+        ]
+      + revision                 = (known after apply)
+      + skip_destroy             = false
+      + tags_all                 = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + task_role_arn            = (known after apply)
+      + track_latest             = false
+
+      + runtime_platform {
+          + cpu_architecture        = "X86_64"
+          + operating_system_family = "LINUX"
+        }
+    }
+
+  # module.ecs.aws_ecs_task_definition.frontend will be created
+  + resource "aws_ecs_task_definition" "frontend" {
+      + arn                      = (known after apply)
+      + arn_without_revision     = (known after apply)
+      + container_definitions    = jsonencode(
+            [
+              + {
+                  + essential        = true
+                  + image            = "636361171302.dkr.ecr.eu-west-3.amazonaws.com/voicecraft-prod-frontend:c73f451"
+                  + logConfiguration = {
+                      + logDriver = "awslogs"
+                      + options   = {
+                          + awslogs-group         = "/ecs/voicecraft-prod/frontend"
+                          + awslogs-region        = "eu-west-3"
+                          + awslogs-stream-prefix = "frontend"
+                        }
+                    }
+                  + name             = "frontend"
+                  + portMappings     = [
+                      + {
+                          + containerPort = 8080
+                          + protocol      = "tcp"
+                        },
+                    ]
+                },
+            ]
+        )
+      + cpu                      = "256"
+      + enable_fault_injection   = (known after apply)
+      + execution_role_arn       = (known after apply)
+      + family                   = "voicecraft-prod-frontend"
+      + id                       = (known after apply)
+      + memory                   = "512"
+      + network_mode             = "awsvpc"
+      + region                   = "eu-west-3"
+      + requires_compatibilities = [
+          + "FARGATE",
+        ]
+      + revision                 = (known after apply)
+      + skip_destroy             = false
+      + tags_all                 = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + track_latest             = false
+
+      + runtime_platform {
+          + cpu_architecture        = "X86_64"
+          + operating_system_family = "LINUX"
+        }
+    }
+
+  # module.ecs.aws_ecs_task_definition.sandbox will be created
+  + resource "aws_ecs_task_definition" "sandbox" {
+      + arn                      = (known after apply)
+      + arn_without_revision     = (known after apply)
+      + container_definitions    = jsonencode(
+            [
+              + {
+                  + essential              = true
+                  + image                  = "636361171302.dkr.ecr.eu-west-3.amazonaws.com/voicecraft-prod-sandbox:c73f451"
+                  + linuxParameters        = {
+                      + capabilities = {
+                          + drop = [
+                              + "ALL",
+                            ]
+                        }
+                    }
+                  + logConfiguration       = {
+                      + logDriver = "awslogs"
+                      + options   = {
+                          + awslogs-group         = "/ecs/voicecraft-prod/sandbox"
+                          + awslogs-region        = "eu-west-3"
+                          + awslogs-stream-prefix = "sandbox"
+                        }
+                    }
+                  + mountPoints            = [
+                      + {
+                          + containerPath = "/tmp"
+                          + readOnly      = false
+                          + sourceVolume  = "tmp"
+                        },
+                    ]
+                  + name                   = "sandbox"
+                  + portMappings           = [
+                      + {
+                          + containerPort = 8000
+                          + protocol      = "tcp"
+                        },
+                    ]
+                  + readonlyRootFilesystem = true
+                  + user                   = "1000:1000"
+                },
+            ]
+        )
+      + cpu                      = "512"
+      + enable_fault_injection   = (known after apply)
+      + execution_role_arn       = (known after apply)
+      + family                   = "voicecraft-prod-sandbox"
+      + id                       = (known after apply)
+      + memory                   = "1024"
+      + network_mode             = "awsvpc"
+      + region                   = "eu-west-3"
+      + requires_compatibilities = [
+          + "FARGATE",
+        ]
+      + revision                 = (known after apply)
+      + skip_destroy             = false
+      + tags_all                 = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + track_latest             = false
+
+      + runtime_platform {
+          + cpu_architecture        = "X86_64"
+          + operating_system_family = "LINUX"
+        }
+
+      + volume {
+          + configure_at_launch = (known after apply)
+          + name                = "tmp"
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.ecs.aws_iam_role.backend_task will be created
+  + resource "aws_iam_role" "backend_task" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceAccount" = "636361171302"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "voicecraft-prod-backend-task"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.ecs.aws_iam_role.execution will be created
+  + resource "aws_iam_role" "execution" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceAccount" = "636361171302"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "voicecraft-prod-ecs-task-execution"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.ecs.aws_iam_role_policy.backend_task will be created
+  + resource "aws_iam_role_policy" "backend_task" {
+      + id          = (known after apply)
+      + name        = "run-sandbox"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.ecs.aws_iam_role_policy.execution_secrets will be created
+  + resource "aws_iam_role_policy" "execution_secrets" {
+      + id          = (known after apply)
+      + name        = "read-app-secrets"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.ecs.aws_iam_role_policy_attachment.execution will be created
+  + resource "aws_iam_role_policy_attachment" "execution" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+      + role       = "voicecraft-prod-ecs-task-execution"
+    }
+
+  # module.kms.aws_kms_alias.this will be created
+  + resource "aws_kms_alias" "this" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/voicecraft-prod"
+      + name_prefix    = (known after apply)
+      + region         = "eu-west-3"
+      + target_key_arn = (known after apply)
+      + target_key_id  = "02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+    }
+
+  # module.logging.data.aws_iam_policy_document.this will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "this" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "s3:*",
+            ]
+          + effect    = "Deny"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+          + sid       = "DenyInsecureTransport"
+
+          + condition {
+              + test     = "Bool"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:SecureTransport"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "*",
+                ]
+              + type        = "*"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "s3:PutObject",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "ALBAccessLogs"
+
+          + principals {
+              + identifiers = [
+                  + "arn:aws:iam::009996457667:root",
+                ]
+              + type        = "AWS"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "s3:GetBucketAcl",
+              + "s3:ListBucket",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "ServicesAclCheck"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "636361171302",
+                ]
+              + variable = "aws:SourceAccount"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "cloudtrail.amazonaws.com",
+                  + "config.amazonaws.com",
+                  + "delivery.logs.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "s3:PutObject",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "CloudTrailWrite"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "arn:aws:cloudtrail:eu-west-3:636361171302:trail/voicecraft-prod-trail",
+                ]
+              + variable = "aws:SourceArn"
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "bucket-owner-full-control",
+                ]
+              + variable = "s3:x-amz-acl"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "cloudtrail.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "s3:PutObject",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "ConfigWrite"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "636361171302",
+                ]
+              + variable = "aws:SourceAccount"
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "bucket-owner-full-control",
+                ]
+              + variable = "s3:x-amz-acl"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "config.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "s3:PutObject",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "WAFLogDelivery"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "636361171302",
+                ]
+              + variable = "aws:SourceAccount"
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "bucket-owner-full-control",
+                ]
+              + variable = "s3:x-amz-acl"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "delivery.logs.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+    }
+
+  # module.logging.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "aws-waf-logs-voicecraft-prod-636361171302"
+      + bucket_domain_name          = (known after apply)
+      + bucket_namespace            = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_region               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = false
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = "eu-west-3"
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.logging.aws_s3_bucket_lifecycle_configuration.this will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + region                                 = "eu-west-3"
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "archive-then-expire"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + expiration {
+              + days                         = 365
+              + expired_object_delete_marker = false
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + noncurrent_version_expiration {
+              + noncurrent_days = 30
+            }
+
+          + transition {
+              + days          = 90
+              + storage_class = "GLACIER_IR"
+            }
+        }
+    }
+
+  # module.logging.aws_s3_bucket_ownership_controls.this will be created
+  + resource "aws_s3_bucket_ownership_controls" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + region = "eu-west-3"
+
+      + rule {
+          + object_ownership = "BucketOwnerEnforced"
+        }
+    }
+
+  # module.logging.aws_s3_bucket_policy.this will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = (known after apply)
+      + region = "eu-west-3"
+    }
+
+  # module.logging.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + region                  = "eu-west-3"
+      + restrict_public_buckets = true
+    }
+
+  # module.logging.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + region = "eu-west-3"
+
+      + rule {
+          + blocked_encryption_types = (known after apply)
+          + bucket_key_enabled       = (known after apply)
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "AES256"
+            }
+        }
+    }
+
+  # module.logging.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + region = "eu-west-3"
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.monitoring.data.aws_iam_policy_document.alerts will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "alerts" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "sns:Publish",
+            ]
+          + resources = [
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "636361171302",
+                ]
+              + variable = "aws:SourceAccount"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "budgets.amazonaws.com",
+                  + "cloudwatch.amazonaws.com",
+                  + "events.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+    }
+
+  # module.monitoring.aws_budgets_budget.monthly will be created
+  + resource "aws_budgets_budget" "monthly" {
+      + account_id        = (known after apply)
+      + arn               = (known after apply)
+      + budget_type       = "COST"
+      + id                = (known after apply)
+      + limit_amount      = "300"
+      + limit_unit        = "USD"
+      + name              = "voicecraft-prod-monthly"
+      + name_prefix       = (known after apply)
+      + tags_all          = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + time_period_end   = "2087-06-15_00:00"
+      + time_period_start = (known after apply)
+      + time_unit         = "MONTHLY"
+
+      + cost_filter (known after apply)
+
+      + cost_types (known after apply)
+
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "ACTUAL"
+          + subscriber_email_addresses = [
+              + "marwamarwa3a2@gmail.com",
+            ]
+          + subscriber_sns_topic_arns  = (known after apply)
+          + threshold                  = 80
+          + threshold_type             = "PERCENTAGE"
+        }
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "FORECASTED"
+          + subscriber_email_addresses = [
+              + "marwamarwa3a2@gmail.com",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 100
+          + threshold_type             = "PERCENTAGE"
+        }
+    }
+
+  # module.monitoring.aws_cloudwatch_dashboard.this will be created
+  + resource "aws_cloudwatch_dashboard" "this" {
+      + dashboard_arn  = (known after apply)
+      + dashboard_body = (known after apply)
+      + dashboard_name = "voicecraft-prod"
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+    }
+
+  # module.monitoring.aws_cloudwatch_event_rule.guardduty will be created
+  + resource "aws_cloudwatch_event_rule" "guardduty" {
+      + arn            = (known after apply)
+      + event_bus_name = "default"
+      + event_pattern  = jsonencode(
+            {
+              + detail      = {
+                  + severity = [
+                      + {
+                          + numeric = [
+                              + ">=",
+                              + 4,
+                            ]
+                        },
+                    ]
+                }
+              + detail-type = [
+                  + "GuardDuty Finding",
+                ]
+              + source      = [
+                  + "aws.guardduty",
+                ]
+            }
+        )
+      + force_destroy  = false
+      + id             = (known after apply)
+      + name           = "voicecraft-prod-guardduty-findings"
+      + name_prefix    = (known after apply)
+      + region         = "eu-west-3"
+      + tags_all       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.monitoring.aws_cloudwatch_event_rule.securityhub will be created
+  + resource "aws_cloudwatch_event_rule" "securityhub" {
+      + arn            = (known after apply)
+      + event_bus_name = "default"
+      + event_pattern  = jsonencode(
+            {
+              + detail      = {
+                  + findings = {
+                      + Severity = {
+                          + Label = [
+                              + "CRITICAL",
+                              + "HIGH",
+                            ]
+                        }
+                    }
+                }
+              + detail-type = [
+                  + "Security Hub Findings - Imported",
+                ]
+              + source      = [
+                  + "aws.securityhub",
+                ]
+            }
+        )
+      + force_destroy  = false
+      + id             = (known after apply)
+      + name           = "voicecraft-prod-securityhub-critical"
+      + name_prefix    = (known after apply)
+      + region         = "eu-west-3"
+      + tags_all       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.monitoring.aws_cloudwatch_event_target.sns["guardduty"] will be created
+  + resource "aws_cloudwatch_event_target" "sns" {
+      + arn            = (known after apply)
+      + event_bus_name = "default"
+      + force_destroy  = false
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + rule           = "voicecraft-prod-guardduty-findings"
+      + target_id      = (known after apply)
+    }
+
+  # module.monitoring.aws_cloudwatch_event_target.sns["securityhub"] will be created
+  + resource "aws_cloudwatch_event_target" "sns" {
+      + arn            = (known after apply)
+      + event_bus_name = "default"
+      + force_destroy  = false
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + rule           = "voicecraft-prod-securityhub-critical"
+      + target_id      = (known after apply)
+    }
+
+  # module.monitoring.aws_cloudwatch_metric_alarm.this["alb-5xx"] will be created
+  + resource "aws_cloudwatch_metric_alarm" "this" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_name                            = "voicecraft-prod-alb-5xx"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanThreshold"
+      + dimensions                            = (known after apply)
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 2
+      + id                                    = (known after apply)
+      + metric_name                           = "HTTPCode_Target_5XX_Count"
+      + namespace                             = "AWS/ApplicationELB"
+      + ok_actions                            = (known after apply)
+      + period                                = 300
+      + region                                = "eu-west-3"
+      + statistic                             = "Sum"
+      + tags_all                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + threshold                             = 20
+      + treat_missing_data                    = "notBreaching"
+    }
+
+  # module.monitoring.aws_cloudwatch_metric_alarm.this["backend-cpu"] will be created
+  + resource "aws_cloudwatch_metric_alarm" "this" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_name                            = "voicecraft-prod-backend-cpu"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanThreshold"
+      + dimensions                            = {
+          + "ClusterName" = "voicecraft-prod-app"
+          + "ServiceName" = "backend"
+        }
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 2
+      + id                                    = (known after apply)
+      + metric_name                           = "CPUUtilization"
+      + namespace                             = "AWS/ECS"
+      + ok_actions                            = (known after apply)
+      + period                                = 300
+      + region                                = "eu-west-3"
+      + statistic                             = "Average"
+      + tags_all                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + threshold                             = 85
+      + treat_missing_data                    = "notBreaching"
+    }
+
+  # module.monitoring.aws_cloudwatch_metric_alarm.this["backend-unhealthy"] will be created
+  + resource "aws_cloudwatch_metric_alarm" "this" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_name                            = "voicecraft-prod-backend-unhealthy"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanThreshold"
+      + dimensions                            = (known after apply)
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 2
+      + id                                    = (known after apply)
+      + metric_name                           = "UnHealthyHostCount"
+      + namespace                             = "AWS/ApplicationELB"
+      + ok_actions                            = (known after apply)
+      + period                                = 300
+      + region                                = "eu-west-3"
+      + statistic                             = "Maximum"
+      + tags_all                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + threshold                             = 0
+      + treat_missing_data                    = "notBreaching"
+    }
+
+  # module.monitoring.aws_cloudwatch_metric_alarm.this["docdb-cpu"] will be created
+  + resource "aws_cloudwatch_metric_alarm" "this" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_name                            = "voicecraft-prod-docdb-cpu"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanThreshold"
+      + dimensions                            = {
+          + "DBClusterIdentifier" = "voicecraft-prod-docdb"
+        }
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 2
+      + id                                    = (known after apply)
+      + metric_name                           = "CPUUtilization"
+      + namespace                             = "AWS/DocDB"
+      + ok_actions                            = (known after apply)
+      + period                                = 300
+      + region                                = "eu-west-3"
+      + statistic                             = "Average"
+      + tags_all                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + threshold                             = 80
+      + treat_missing_data                    = "notBreaching"
+    }
+
+  # module.monitoring.aws_cloudwatch_metric_alarm.this["waf-blocked"] will be created
+  + resource "aws_cloudwatch_metric_alarm" "this" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_name                            = "voicecraft-prod-waf-blocked"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanThreshold"
+      + dimensions                            = {
+          + "Region" = "eu-west-3"
+          + "Rule"   = "ALL"
+          + "WebACL" = "voicecraft-prod-waf"
+        }
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 2
+      + id                                    = (known after apply)
+      + metric_name                           = "BlockedRequests"
+      + namespace                             = "AWS/WAFV2"
+      + ok_actions                            = (known after apply)
+      + period                                = 300
+      + region                                = "eu-west-3"
+      + statistic                             = "Sum"
+      + tags_all                              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + threshold                             = 500
+      + treat_missing_data                    = "notBreaching"
+    }
+
+  # module.monitoring.aws_sns_topic.alerts will be created
+  + resource "aws_sns_topic" "alerts" {
+      + arn                         = (known after apply)
+      + beginning_archive_time      = (known after apply)
+      + content_based_deduplication = false
+      + fifo_throughput_scope       = (known after apply)
+      + fifo_topic                  = false
+      + id                          = (known after apply)
+      + kms_master_key_id           = "02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + name                        = "voicecraft-prod-alerts"
+      + name_prefix                 = (known after apply)
+      + owner                       = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = "eu-west-3"
+      + signature_version           = (known after apply)
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + tracing_config              = (known after apply)
+    }
+
+  # module.monitoring.aws_sns_topic_policy.alerts will be created
+  + resource "aws_sns_topic_policy" "alerts" {
+      + arn    = (known after apply)
+      + id     = (known after apply)
+      + owner  = (known after apply)
+      + policy = (known after apply)
+      + region = "eu-west-3"
+    }
+
+  # module.monitoring.aws_sns_topic_subscription.email will be created
+  + resource "aws_sns_topic_subscription" "email" {
+      + arn                             = (known after apply)
+      + confirmation_timeout_in_minutes = 1
+      + confirmation_was_authenticated  = (known after apply)
+      + endpoint                        = "marwamarwa3a2@gmail.com"
+      + endpoint_auto_confirms          = false
+      + filter_policy_scope             = (known after apply)
+      + id                              = (known after apply)
+      + owner_id                        = (known after apply)
+      + pending_confirmation            = (known after apply)
+      + protocol                        = "email"
+      + raw_message_delivery            = false
+      + region                          = "eu-west-3"
+      + topic_arn                       = (known after apply)
+    }
+
+  # module.secrets.aws_ssm_parameter.groq_api_key will be created
+  + resource "aws_ssm_parameter" "groq_api_key" {
+      + arn            = (known after apply)
+      + data_type      = (known after apply)
+      + has_value_wo   = (known after apply)
+      + id             = (known after apply)
+      + insecure_value = (known after apply)
+      + key_id         = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + name           = "/voicecraft/prod/groq_api_key"
+      + region         = "eu-west-3"
+      + tags_all       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + tier           = (known after apply)
+      + type           = "SecureString"
+      + value          = (sensitive value)
+      + value_wo       = (write-only attribute)
+      + version        = (known after apply)
+    }
+
+  # module.secrets.aws_ssm_parameter.jwt_secret will be created
+  + resource "aws_ssm_parameter" "jwt_secret" {
+      + arn            = (known after apply)
+      + data_type      = (known after apply)
+      + has_value_wo   = (known after apply)
+      + id             = (known after apply)
+      + insecure_value = (known after apply)
+      + key_id         = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + name           = "/voicecraft/prod/jwt_secret"
+      + region         = "eu-west-3"
+      + tags_all       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + tier           = (known after apply)
+      + type           = "SecureString"
+      + value          = (sensitive value)
+      + value_wo       = (write-only attribute)
+      + version        = (known after apply)
+    }
+
+  # module.secrets.random_password.jwt will be created
+  + resource "random_password" "jwt" {
+      + bcrypt_hash = (sensitive value)
+      + id          = (known after apply)
+      + length      = 64
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (sensitive value)
+      + special     = false
+      + upper       = true
+    }
+
+  # module.security.aws_accessanalyzer_analyzer.this will be created
+  + resource "aws_accessanalyzer_analyzer" "this" {
+      + analyzer_name = "voicecraft-prod-analyzer"
+      + arn           = (known after apply)
+      + id            = (known after apply)
+      + region        = "eu-west-3"
+      + tags_all      = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + type          = "ACCOUNT"
+    }
+
+  # module.security.aws_cloudtrail.this will be created
+  + resource "aws_cloudtrail" "this" {
+      + arn                           = (known after apply)
+      + enable_log_file_validation    = true
+      + enable_logging                = true
+      + home_region                   = (known after apply)
+      + id                            = (known after apply)
+      + include_global_service_events = true
+      + is_multi_region_trail         = true
+      + is_organization_trail         = false
+      + name                          = "voicecraft-prod-trail"
+      + region                        = "eu-west-3"
+      + s3_bucket_name                = (known after apply)
+      + s3_key_prefix                 = "cloudtrail"
+      + sns_topic_arn                 = (known after apply)
+      + tags_all                      = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.security.aws_config_config_rule.managed["CLOUD_TRAIL_ENABLED"] will be created
+  + resource "aws_config_config_rule" "managed" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "cloud-trail-enabled"
+      + region   = "eu-west-3"
+      + rule_id  = (known after apply)
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + evaluation_mode (known after apply)
+
+      + source {
+          + owner             = "AWS"
+          + source_identifier = "CLOUD_TRAIL_ENABLED"
+        }
+    }
+
+  # module.security.aws_config_config_rule.managed["ECR_PRIVATE_IMAGE_SCANNING_ENABLED"] will be created
+  + resource "aws_config_config_rule" "managed" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "ecr-private-image-scanning-enabled"
+      + region   = "eu-west-3"
+      + rule_id  = (known after apply)
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + evaluation_mode (known after apply)
+
+      + source {
+          + owner             = "AWS"
+          + source_identifier = "ECR_PRIVATE_IMAGE_SCANNING_ENABLED"
+        }
+    }
+
+  # module.security.aws_config_config_rule.managed["IAM_ROOT_ACCESS_KEY_CHECK"] will be created
+  + resource "aws_config_config_rule" "managed" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "iam-root-access-key-check"
+      + region   = "eu-west-3"
+      + rule_id  = (known after apply)
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + evaluation_mode (known after apply)
+
+      + source {
+          + owner             = "AWS"
+          + source_identifier = "IAM_ROOT_ACCESS_KEY_CHECK"
+        }
+    }
+
+  # module.security.aws_config_config_rule.managed["S3_BUCKET_PUBLIC_READ_PROHIBITED"] will be created
+  + resource "aws_config_config_rule" "managed" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "s3-bucket-public-read-prohibited"
+      + region   = "eu-west-3"
+      + rule_id  = (known after apply)
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + evaluation_mode (known after apply)
+
+      + source {
+          + owner             = "AWS"
+          + source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
+        }
+    }
+
+  # module.security.aws_config_config_rule.managed["VPC_FLOW_LOGS_ENABLED"] will be created
+  + resource "aws_config_config_rule" "managed" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "vpc-flow-logs-enabled"
+      + region   = "eu-west-3"
+      + rule_id  = (known after apply)
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + evaluation_mode (known after apply)
+
+      + source {
+          + owner             = "AWS"
+          + source_identifier = "VPC_FLOW_LOGS_ENABLED"
+        }
+    }
+
+  # module.security.aws_config_configuration_recorder.this[0] will be created
+  + resource "aws_config_configuration_recorder" "this" {
+      + id       = (known after apply)
+      + name     = "voicecraft-prod-recorder"
+      + region   = "eu-west-3"
+      + role_arn = (known after apply)
+
+      + recording_group {
+          + all_supported                 = true
+          + include_global_resource_types = true
+
+          + exclusion_by_resource_types (known after apply)
+
+          + recording_strategy (known after apply)
+        }
+
+      + recording_mode (known after apply)
+    }
+
+  # module.security.aws_config_configuration_recorder_status.this[0] will be created
+  + resource "aws_config_configuration_recorder_status" "this" {
+      + id         = (known after apply)
+      + is_enabled = true
+      + name       = "voicecraft-prod-recorder"
+      + region     = "eu-west-3"
+    }
+
+  # module.security.aws_config_delivery_channel.this[0] will be created
+  + resource "aws_config_delivery_channel" "this" {
+      + id             = (known after apply)
+      + name           = "voicecraft-prod-channel"
+      + region         = "eu-west-3"
+      + s3_bucket_name = (known after apply)
+      + s3_key_prefix  = "config"
+    }
+
+  # module.security.aws_guardduty_detector.this[0] will be created
+  + resource "aws_guardduty_detector" "this" {
+      + account_id                   = (known after apply)
+      + arn                          = (known after apply)
+      + enable                       = true
+      + finding_publishing_frequency = (known after apply)
+      + id                           = (known after apply)
+      + region                       = "eu-west-3"
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + datasources (known after apply)
+    }
+
+  # module.security.aws_guardduty_detector_feature.runtime[0] will be created
+  + resource "aws_guardduty_detector_feature" "runtime" {
+      + detector_id = (known after apply)
+      + id          = (known after apply)
+      + name        = "RUNTIME_MONITORING"
+      + region      = "eu-west-3"
+      + status      = "ENABLED"
+
+      + additional_configuration {
+          + name   = "ECS_FARGATE_AGENT_MANAGEMENT"
+          + status = "ENABLED"
+        }
+    }
+
+  # module.security.aws_iam_role.config[0] will be created
+  + resource "aws_iam_role" "config" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "voicecraft-prod-config"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.security.aws_iam_role_policy_attachment.config[0] will be created
+  + resource "aws_iam_role_policy_attachment" "config" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+      + role       = "voicecraft-prod-config"
+    }
+
+  # module.security.aws_inspector2_enabler.this[0] will be created
+  + resource "aws_inspector2_enabler" "this" {
+      + account_ids    = [
+          + "636361171302",
+        ]
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + resource_types = [
+          + "ECR",
+        ]
+    }
+
+  # module.security.aws_securityhub_account.this[0] will be created
+  + resource "aws_securityhub_account" "this" {
+      + arn                       = (known after apply)
+      + auto_enable_controls      = true
+      + control_finding_generator = (known after apply)
+      + enable_default_standards  = false
+      + id                        = (known after apply)
+      + region                    = "eu-west-3"
+    }
+
+  # module.security.aws_securityhub_standards_subscription.fsbp[0] will be created
+  + resource "aws_securityhub_standards_subscription" "fsbp" {
+      + arn           = (known after apply)
+      + id            = (known after apply)
+      + region        = "eu-west-3"
+      + standards_arn = "arn:aws:securityhub:eu-west-3::standards/aws-foundational-security-best-practices/v/1.0.0"
+    }
+
+  # module.vpc.aws_cloudwatch_log_group.flow_logs will be created
+  + resource "aws_cloudwatch_log_group" "flow_logs" {
+      + arn                         = (known after apply)
+      + deletion_protection_enabled = (known after apply)
+      + id                          = (known after apply)
+      + kms_key_id                  = "arn:aws:kms:eu-west-3:636361171302:key/02ce681f-c173-4cb2-8ce6-f876bedcf6d2"
+      + log_group_class             = (known after apply)
+      + name                        = "/vpc/voicecraft-prod/flow-logs"
+      + name_prefix                 = (known after apply)
+      + region                      = "eu-west-3"
+      + retention_in_days           = 90
+      + skip_destroy                = false
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.vpc.aws_default_security_group.default will be created
+  + resource "aws_default_security_group" "default" {
+      + arn                    = (known after apply)
+      + description            = (known after apply)
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "voicecraft-prod-default-locked"
+        }
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-default-locked"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_eip.nat[0] will be created
+  + resource "aws_eip" "nat" {
+      + allocation_id        = (known after apply)
+      + arn                  = (known after apply)
+      + association_id       = (known after apply)
+      + carrier_ip           = (known after apply)
+      + customer_owned_ip    = (known after apply)
+      + domain               = "vpc"
+      + id                   = (known after apply)
+      + instance             = (known after apply)
+      + ipam_pool_id         = (known after apply)
+      + network_border_group = (known after apply)
+      + network_interface    = (known after apply)
+      + private_dns          = (known after apply)
+      + private_ip           = (known after apply)
+      + ptr_record           = (known after apply)
+      + public_dns           = (known after apply)
+      + public_ip            = (known after apply)
+      + public_ipv4_pool     = (known after apply)
+      + region               = "eu-west-3"
+      + tags                 = {
+          + "Name" = "voicecraft-prod-nat-0"
+        }
+      + tags_all             = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-nat-0"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.vpc.aws_eip.nat[1] will be created
+  + resource "aws_eip" "nat" {
+      + allocation_id        = (known after apply)
+      + arn                  = (known after apply)
+      + association_id       = (known after apply)
+      + carrier_ip           = (known after apply)
+      + customer_owned_ip    = (known after apply)
+      + domain               = "vpc"
+      + id                   = (known after apply)
+      + instance             = (known after apply)
+      + ipam_pool_id         = (known after apply)
+      + network_border_group = (known after apply)
+      + network_interface    = (known after apply)
+      + private_dns          = (known after apply)
+      + private_ip           = (known after apply)
+      + ptr_record           = (known after apply)
+      + public_dns           = (known after apply)
+      + public_ip            = (known after apply)
+      + public_ipv4_pool     = (known after apply)
+      + region               = "eu-west-3"
+      + tags                 = {
+          + "Name" = "voicecraft-prod-nat-1"
+        }
+      + tags_all             = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-nat-1"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.vpc.aws_flow_log.this will be created
+  + resource "aws_flow_log" "this" {
+      + arn                      = (known after apply)
+      + iam_role_arn             = (known after apply)
+      + id                       = (known after apply)
+      + log_destination          = (known after apply)
+      + log_destination_type     = "cloud-watch-logs"
+      + log_format               = (known after apply)
+      + max_aggregation_interval = 60
+      + region                   = "eu-west-3"
+      + tags_all                 = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + traffic_type             = "ALL"
+      + vpc_id                   = (known after apply)
+    }
+
+  # module.vpc.aws_iam_role.flow_logs will be created
+  + resource "aws_iam_role" "flow_logs" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "vpc-flow-logs.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "voicecraft-prod-flow-logs"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.vpc.aws_iam_role_policy.flow_logs will be created
+  + resource "aws_iam_role_policy" "flow_logs" {
+      + id          = (known after apply)
+      + name        = "write-flow-logs"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.vpc.aws_internet_gateway.this will be created
+  + resource "aws_internet_gateway" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + region   = "eu-west-3"
+      + tags     = {
+          + "Name" = "voicecraft-prod-igw"
+        }
+      + tags_all = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-igw"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # module.vpc.aws_nat_gateway.this[0] will be created
+  + resource "aws_nat_gateway" "this" {
+      + allocation_id                      = (known after apply)
+      + association_id                     = (known after apply)
+      + auto_provision_zones               = (known after apply)
+      + auto_scaling_ips                   = (known after apply)
+      + availability_mode                  = (known after apply)
+      + connectivity_type                  = "public"
+      + id                                 = (known after apply)
+      + network_interface_id               = (known after apply)
+      + private_ip                         = (known after apply)
+      + public_ip                          = (known after apply)
+      + region                             = "eu-west-3"
+      + regional_nat_gateway_address       = (known after apply)
+      + regional_nat_gateway_auto_mode     = (known after apply)
+      + route_table_id                     = (known after apply)
+      + secondary_allocation_ids           = (known after apply)
+      + secondary_private_ip_address_count = (known after apply)
+      + secondary_private_ip_addresses     = (known after apply)
+      + subnet_id                          = (known after apply)
+      + tags                               = {
+          + "Name" = "voicecraft-prod-nat-0"
+        }
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-nat-0"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                             = (known after apply)
+    }
+
+  # module.vpc.aws_nat_gateway.this[1] will be created
+  + resource "aws_nat_gateway" "this" {
+      + allocation_id                      = (known after apply)
+      + association_id                     = (known after apply)
+      + auto_provision_zones               = (known after apply)
+      + auto_scaling_ips                   = (known after apply)
+      + availability_mode                  = (known after apply)
+      + connectivity_type                  = "public"
+      + id                                 = (known after apply)
+      + network_interface_id               = (known after apply)
+      + private_ip                         = (known after apply)
+      + public_ip                          = (known after apply)
+      + region                             = "eu-west-3"
+      + regional_nat_gateway_address       = (known after apply)
+      + regional_nat_gateway_auto_mode     = (known after apply)
+      + route_table_id                     = (known after apply)
+      + secondary_allocation_ids           = (known after apply)
+      + secondary_private_ip_address_count = (known after apply)
+      + secondary_private_ip_addresses     = (known after apply)
+      + subnet_id                          = (known after apply)
+      + tags                               = {
+          + "Name" = "voicecraft-prod-nat-1"
+        }
+      + tags_all                           = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-nat-1"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                             = (known after apply)
+    }
+
+  # module.vpc.aws_route_table.app[0] will be created
+  + resource "aws_route_table" "app" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "eu-west-3"
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + nat_gateway_id             = (known after apply)
+                # (12 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "voicecraft-prod-rt-app-0"
+        }
+      + tags_all         = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-rt-app-0"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table.app[1] will be created
+  + resource "aws_route_table" "app" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "eu-west-3"
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + nat_gateway_id             = (known after apply)
+                # (12 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "voicecraft-prod-rt-app-1"
+        }
+      + tags_all         = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-rt-app-1"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table.isolated will be created
+  + resource "aws_route_table" "isolated" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "eu-west-3"
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "voicecraft-prod-rt-isolated"
+        }
+      + tags_all         = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-rt-isolated"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table.public will be created
+  + resource "aws_route_table" "public" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + region           = "eu-west-3"
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + gateway_id                 = (known after apply)
+                # (12 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "voicecraft-prod-rt-public"
+        }
+      + tags_all         = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-rt-public"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.app[0] will be created
+  + resource "aws_route_table_association" "app" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.app[1] will be created
+  + resource "aws_route_table_association" "app" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["data-0"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["data-1"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["endpoints-0"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["endpoints-1"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["sandbox-0"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.isolated["sandbox-1"] will be created
+  + resource "aws_route_table_association" "isolated" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.public[0] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.public[1] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + region         = "eu-west-3"
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.alb will be created
+  + resource "aws_security_group" "alb" {
+      + arn                    = (known after apply)
+      + description            = "ALB - 443 depuis Internet"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-alb"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.backend will be created
+  + resource "aws_security_group" "backend" {
+      + arn                    = (known after apply)
+      + description            = "Backend - 3000 depuis ALB"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-backend"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.docdb will be created
+  + resource "aws_security_group" "docdb" {
+      + arn                    = (known after apply)
+      + description            = "DocumentDB - 27017 depuis backend seul"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-docdb"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.endpoints will be created
+  + resource "aws_security_group" "endpoints" {
+      + arn                    = (known after apply)
+      + description            = "VPC endpoints - 443 depuis le VPC"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-endpoints"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.frontend will be created
+  + resource "aws_security_group" "frontend" {
+      + arn                    = (known after apply)
+      + description            = "Frontend - 8080 depuis ALB, aucune sortie Internet"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-frontend"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_security_group.sandbox will be created
+  + resource "aws_security_group" "sandbox" {
+      + arn                    = (known after apply)
+      + description            = "Sandbox - aucune sortie hors endpoints"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "voicecraft-prod-sandbox"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "eu-west-3"
+      + revoke_rules_on_delete = false
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["app-0"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.10.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-app-0"
+          + "Tier" = "app"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-app-0"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "app"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["app-1"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.11.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-app-1"
+          + "Tier" = "app"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-app-1"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "app"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["data-0"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.30.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-data-0"
+          + "Tier" = "data"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-data-0"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "data"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["data-1"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.31.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-data-1"
+          + "Tier" = "data"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-data-1"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "data"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["endpoints-0"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.40.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-endpoints-0"
+          + "Tier" = "endpoints"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-endpoints-0"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "endpoints"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["endpoints-1"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.41.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-endpoints-1"
+          + "Tier" = "endpoints"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-endpoints-1"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "endpoints"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["public-0"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.0.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-public-0"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-public-0"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["public-1"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-public-1"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-public-1"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["sandbox-0"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.20.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-sandbox-0"
+          + "Tier" = "sandbox"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-sandbox-0"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "sandbox"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.this["sandbox-1"] will be created
+  + resource "aws_subnet" "this" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "eu-west-3b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.21.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block                                = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + region                                         = "eu-west-3"
+      + tags                                           = {
+          + "Name" = "voicecraft-prod-sandbox-1"
+          + "Tier" = "sandbox"
+        }
+      + tags_all                                       = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-sandbox-1"
+          + "Project"     = "voicecraft"
+          + "Tier"        = "sandbox"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_vpc.this will be created
+  + resource "aws_vpc" "this" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.0.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = true
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + region                               = "eu-west-3"
+      + tags                                 = {
+          + "Name" = "voicecraft-prod-vpc"
+        }
+      + tags_all                             = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpc"
+          + "Project"     = "voicecraft"
+        }
+    }
+
+  # module.vpc.aws_vpc_endpoint.interface["ecr-api"] will be created
+  + resource "aws_vpc_endpoint" "interface" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = true
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.ecr.api"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-ecr-api"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-ecr-api"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Interface"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_endpoint.interface["ecr-dkr"] will be created
+  + resource "aws_vpc_endpoint" "interface" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = true
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.ecr.dkr"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-ecr-dkr"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-ecr-dkr"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Interface"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_endpoint.interface["logs"] will be created
+  + resource "aws_vpc_endpoint" "interface" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = true
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.logs"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-logs"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-logs"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Interface"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_endpoint.interface["secrets"] will be created
+  + resource "aws_vpc_endpoint" "interface" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = true
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.secretsmanager"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-secrets"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-secrets"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Interface"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_endpoint.interface["ssm"] will be created
+  + resource "aws_vpc_endpoint" "interface" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = true
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.ssm"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-ssm"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-ssm"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Interface"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_endpoint.s3 will be created
+  + resource "aws_vpc_endpoint" "s3" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = (known after apply)
+      + region                = "eu-west-3"
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.eu-west-3.s3"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "voicecraft-prod-vpce-s3"
+        }
+      + tags_all              = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Name"        = "voicecraft-prod-vpce-s3"
+          + "Project"     = "voicecraft"
+        }
+      + vpc_endpoint_type     = "Gateway"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.alb_to_backend will be created
+  + resource "aws_vpc_security_group_egress_rule" "alb_to_backend" {
+      + arn                          = (known after apply)
+      + from_port                    = 3000
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 3000
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.alb_to_frontend will be created
+  + resource "aws_vpc_security_group_egress_rule" "alb_to_frontend" {
+      + arn                          = (known after apply)
+      + from_port                    = 8080
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 8080
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.backend_https_out will be created
+  + resource "aws_vpc_security_group_egress_rule" "backend_https_out" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "0.0.0.0/0"
+      + description            = "API Groq et API ECS via NAT"
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + region                 = "eu-west-3"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.backend_to_docdb will be created
+  + resource "aws_vpc_security_group_egress_rule" "backend_to_docdb" {
+      + arn                          = (known after apply)
+      + from_port                    = 27017
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 27017
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.backend_to_sandbox will be created
+  + resource "aws_vpc_security_group_egress_rule" "backend_to_sandbox" {
+      + arn                          = (known after apply)
+      + from_port                    = 8000
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 8000
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.to_endpoints["frontend"] will be created
+  + resource "aws_vpc_security_group_egress_rule" "to_endpoints" {
+      + arn                          = (known after apply)
+      + from_port                    = 443
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.to_endpoints["sandbox"] will be created
+  + resource "aws_vpc_security_group_egress_rule" "to_endpoints" {
+      + arn                          = (known after apply)
+      + from_port                    = 443
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.to_s3_gateway["frontend"] will be created
+  + resource "aws_vpc_security_group_egress_rule" "to_s3_gateway" {
+      + arn                    = (known after apply)
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + prefix_list_id         = (known after apply)
+      + region                 = "eu-west-3"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_egress_rule.to_s3_gateway["sandbox"] will be created
+  + resource "aws_vpc_security_group_egress_rule" "to_s3_gateway" {
+      + arn                    = (known after apply)
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + prefix_list_id         = (known after apply)
+      + region                 = "eu-west-3"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.alb_https will be created
+  + resource "aws_vpc_security_group_ingress_rule" "alb_https" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "0.0.0.0/0"
+      + description            = "HTTPS Internet"
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + region                 = "eu-west-3"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.backend_from_alb will be created
+  + resource "aws_vpc_security_group_ingress_rule" "backend_from_alb" {
+      + arn                          = (known after apply)
+      + from_port                    = 3000
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 3000
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.docdb_from_backend will be created
+  + resource "aws_vpc_security_group_ingress_rule" "docdb_from_backend" {
+      + arn                          = (known after apply)
+      + from_port                    = 27017
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 27017
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.endpoints_from_vpc will be created
+  + resource "aws_vpc_security_group_ingress_rule" "endpoints_from_vpc" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "10.0.0.0/16"
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + region                 = "eu-west-3"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                = 443
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.frontend_from_alb will be created
+  + resource "aws_vpc_security_group_ingress_rule" "frontend_from_alb" {
+      + arn                          = (known after apply)
+      + from_port                    = 8080
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 8080
+    }
+
+  # module.vpc.aws_vpc_security_group_ingress_rule.sandbox_from_backend will be created
+  + resource "aws_vpc_security_group_ingress_rule" "sandbox_from_backend" {
+      + arn                          = (known after apply)
+      + from_port                    = 8000
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + region                       = "eu-west-3"
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+      + to_port                      = 8000
+    }
+
+  # module.waf.aws_wafv2_web_acl.this will be created
+  + resource "aws_wafv2_web_acl" "this" {
+      + application_integration_url = (known after apply)
+      + arn                         = (known after apply)
+      + capacity                    = (known after apply)
+      + id                          = (known after apply)
+      + lock_token                  = (known after apply)
+      + name                        = "voicecraft-prod-waf"
+      + name_prefix                 = (known after apply)
+      + region                      = "eu-west-3"
+      + scope                       = "REGIONAL"
+      + tags_all                    = {
+          + "Environment" = "prod"
+          + "ManagedBy"   = "terraform"
+          + "Project"     = "voicecraft"
+        }
+
+      + default_action {
+          + allow {
+            }
+        }
+
+      + rule {
+          + name     = "rate-limit-api"
+          + priority = 1
+
+          + action {
+              + block {
+                }
+            }
+
+          + statement {
+              + rate_based_statement {
+                  + aggregate_key_type    = "IP"
+                  + evaluation_window_sec = 300
+                  + limit                 = 1000
+
+                  + scope_down_statement {
+                      + byte_match_statement {
+                          + positional_constraint = "STARTS_WITH"
+                          + search_string         = "/api/"
+
+                          + field_to_match {
+                              + uri_path {}
+                            }
+
+                          + text_transformation {
+                              + priority = 0
+                              + type     = "NONE"
+                            }
+                        }
+                    }
+                }
+            }
+
+          + visibility_config {
+              + cloudwatch_metrics_enabled = true
+              + metric_name                = "rate-limit-api"
+              + sampled_requests_enabled   = true
+            }
+        }
+      + rule {
+          + name     = "AWSManagedRulesAmazonIpReputationList"
+          + priority = 10
+
+          + override_action {
+              + none {}
+            }
+
+          + statement {
+              + managed_rule_group_statement {
+                  + name        = "AWSManagedRulesAmazonIpReputationList"
+                  + vendor_name = "AWS"
+                    # (1 unchanged attribute hidden)
+                }
+            }
+
+          + visibility_config {
+              + cloudwatch_metrics_enabled = true
+              + metric_name                = "AWSManagedRulesAmazonIpReputationList"
+              + sampled_requests_enabled   = true
+            }
+        }
+      + rule {
+          + name     = "AWSManagedRulesCommonRuleSet"
+          + priority = 20
+
+          + override_action {
+              + none {}
+            }
+
+          + statement {
+              + managed_rule_group_statement {
+                  + name        = "AWSManagedRulesCommonRuleSet"
+                  + vendor_name = "AWS"
+                    # (1 unchanged attribute hidden)
+                }
+            }
+
+          + visibility_config {
+              + cloudwatch_metrics_enabled = true
+              + metric_name                = "AWSManagedRulesCommonRuleSet"
+              + sampled_requests_enabled   = true
+            }
+        }
+      + rule {
+          + name     = "AWSManagedRulesKnownBadInputsRuleSet"
+          + priority = 30
+
+          + override_action {
+              + none {}
+            }
+
+          + statement {
+              + managed_rule_group_statement {
+                  + name        = "AWSManagedRulesKnownBadInputsRuleSet"
+                  + vendor_name = "AWS"
+                    # (1 unchanged attribute hidden)
+                }
+            }
+
+          + visibility_config {
+              + cloudwatch_metrics_enabled = true
+              + metric_name                = "AWSManagedRulesKnownBadInputsRuleSet"
+              + sampled_requests_enabled   = true
+            }
+        }
+
+      + visibility_config {
+          + cloudwatch_metrics_enabled = true
+          + metric_name                = "voicecraft-prod-waf"
+          + sampled_requests_enabled   = true
+        }
+    }
+
+  # module.waf.aws_wafv2_web_acl_association.alb will be created
+  + resource "aws_wafv2_web_acl_association" "alb" {
+      + id           = (known after apply)
+      + region       = "eu-west-3"
+      + resource_arn = (known after apply)
+      + web_acl_arn  = (known after apply)
+    }
+
+  # module.waf.aws_wafv2_web_acl_logging_configuration.this will be created
+  + resource "aws_wafv2_web_acl_logging_configuration" "this" {
+      + id                      = (known after apply)
+      + log_destination_configs = (known after apply)
+      + region                  = "eu-west-3"
+      + resource_arn            = (known after apply)
+
+      + redacted_fields {
+          + single_header {
+              + name = "authorization"
+            }
+        }
+    }
+
+Plan: 152 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + acm_certificate_arn    = (known after apply)
+  + alb_dns_name           = (known after apply)
+  + alerts_topic_arn       = (known after apply)
+  + app_url                = "https://app.voicecraft-plateform.website"
+  + docdb_endpoint         = (known after apply)
+  + docdb_secret_arn       = (known after apply)
+  + ecs_app_cluster        = "voicecraft-prod-app"
+  + ecs_sandbox_cluster    = "voicecraft-prod-sandbox"
+  + groq_api_key_parameter = "/voicecraft/prod/groq_api_key"
+  + logs_bucket            = (known after apply)
+  + nat_public_ips         = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + route53_name_servers   = [
+      + "ns-1328.awsdns-38.org",
+      + "ns-1952.awsdns-52.co.uk",
+      + "ns-488.awsdns-61.com",
+      + "ns-689.awsdns-22.net",
+    ]
+  + route53_zone_id        = "Z02840762DPHP6O2PCXFK"
+
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"
