@@ -5,6 +5,15 @@ name: VoiceCraft Infrastructure
 #   2. Terraform       : setup, fmt check, init, validate, plan -> Email plan output
 #   3. Apply           : NEVER automatic. Triggered manually from the Actions tab
 #                        (Run workflow + "apply" checked), then approved in "production"
+#
+# IMPORTANT - role OIDC :
+#   La politique de confiance du role AWS_DEPLOY_ROLE_ARN doit accepter TOUS
+#   les "sub" emis par ce workflow (push, pull_request, environment:production) :
+#     StringEquals token.actions.githubusercontent.com:aud = sts.amazonaws.com
+#     StringLike   token.actions.githubusercontent.com:sub = repo:<owner>/<repo>:*
+#   Comme ce role est gere par Terraform, toute correction de sa politique de
+#   confiance doit d'abord etre appliquee A LA MAIN (console IAM / CLI), sinon
+#   le pipeline ne peut pas assumer le role pour appliquer la correction.
 
 on:
   push:
@@ -20,6 +29,10 @@ on:
       image_tag:
         description: "ECR image tag (empty = IMAGE_TAG variable)"
         required: false
+      debug_oidc:
+        description: "Afficher les claims OIDC (sub, aud) pour diagnostiquer AssumeRole"
+        type: boolean
+        default: false
   repository_dispatch:
     types: [deploy]
 
@@ -141,6 +154,7 @@ jobs:
             tfsec-results.sarif
             checkov-summary.txt
             tfsec-summary.txt
+          if-no-files-found: ignore
 
       - name: Email security scan results
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.MAIL_TO != ''
@@ -202,6 +216,20 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
+      # Diagnostic : affiche les claims du jeton OIDC (jamais le jeton lui-meme).
+      # Se lance automatiquement en cas de re-run en mode debug, ou via l'input
+      # "debug_oidc" de Run workflow. A comparer avec la politique de confiance.
+      - name: Debug OIDC claims
+        if: env.AWS_READY == 'true' && (inputs.debug_oidc || runner.debug == '1')
+        run: |
+          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r .value)
+          PAYLOAD=$(echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+')
+          # re-padding base64
+          while [ $(( ${#PAYLOAD} % 4 )) -ne 0 ]; do PAYLOAD="${PAYLOAD}="; done
+          echo "$PAYLOAD" | base64 -d | jq '{sub, aud, repository, ref, environment}'
+          echo "Role cible : ${{ vars.AWS_DEPLOY_ROLE_ARN }}"
+
       # Next steps run only when the AWS account is ready (AWS_DEPLOY_ROLE_ARN set)
       - name: Configure AWS credentials (OIDC)
         if: env.AWS_READY == 'true'
@@ -209,6 +237,7 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          audience: sts.amazonaws.com
 
       - name: Terraform init (S3 backend)
         if: env.AWS_READY == 'true'
@@ -255,9 +284,10 @@ jobs:
             tfplan
             plan-output.txt
           retention-days: 5
+          if-no-files-found: ignore
 
       - name: Email plan output
-        if: env.AWS_READY == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.MAIL_TO != ''
+        if: env.AWS_READY == 'true' && steps.plan.outcome == 'success' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.MAIL_TO != ''
         uses: dawidd6/action-send-mail@v3
         continue-on-error: true
         with:
@@ -294,6 +324,9 @@ jobs:
     # Never on push: only "Run workflow" with "apply" checked, on main,
     # and only when the plan of this run detected changes
     if: github.event_name == 'workflow_dispatch' && inputs.apply && github.ref == 'refs/heads/main' && needs.validate-and-plan.outputs.plan_exitcode == '2'
+    # Avec un environment, le "sub" OIDC devient :
+    #   repo:<owner>/<repo>:environment:production
+    # -> la politique de confiance doit l'accepter (StringLike repo:<owner>/<repo>:*)
     environment: production # required reviewers = manual approval
 
     # La validation ACM attend la delegation NS chez GoDaddy : jusqu'a 45 min.
@@ -322,6 +355,7 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          audience: sts.amazonaws.com
           role-duration-seconds: 7200
 
       - name: Terraform init
