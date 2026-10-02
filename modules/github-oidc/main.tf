@@ -36,30 +36,13 @@ data "aws_iam_policy_document" "assume" {
   }
 }
 
-data "aws_iam_policy_document" "assume" {
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-    principals {
-      type        = "Federated"
-      identifiers = [local.oidc_arn]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
-      values   = ["sts.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:sub"
-      values   = local.allowed_subjects
-    }
-  }
-}
-
-# github_deploy : OIDC, aucune clé stockée
+# github_deploy : OIDC, aucune cle stockee
 resource "aws_iam_role" "github_deploy" {
-  name                 = "${var.name}-github-deploy"
-  assume_role_policy   = data.aws_iam_policy_document.assume.json
+  name               = "${var.name}-github-deploy"
+  assume_role_policy = data.aws_iam_policy_document.assume.json
+
+  # 2 h : la creation de DocumentDB prend 20 a 30 min et la validation ACM
+  # jusqu'a 45 min. Une session d'1 h expirerait en plein apply.
   max_session_duration = 7200
 }
 
