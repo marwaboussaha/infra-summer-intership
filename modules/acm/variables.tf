@@ -4,10 +4,10 @@ variable "domain_name" {
 }
 
 variable "zone_id" {
-  description = "Zone Route 53 dans laquelle écrire les CNAME de validation"
+  description = "Non utilise : le module lit la zone lui-meme via hosted_zone_name (evite le cycle dns -> alb -> acm)."
   type        = string
+  default     = null
 }
-
 variable "subject_alternative_names" {
   description = "Noms additionnels couverts par le même certificat"
   type        = list(string)
@@ -24,4 +24,8 @@ variable "validation_timeout" {
   description = "Durée maximale d'attente de la validation DNS"
   type        = string
   default     = "45m"
+}
+variable "hosted_zone_name" {
+  description = "Nom de la zone hebergee Route 53 existante, sans point final."
+  type        = string
 }

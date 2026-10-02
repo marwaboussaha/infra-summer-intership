@@ -7,6 +7,14 @@
 # Le renouvellement est ensuite automatique tant que le CNAME reste.
 # ============================================================
 
+# Zone hébergée existante, lue et non créée : le module acm doit pouvoir
+# écrire ses CNAME de validation sans dépendre du module dns (sinon cycle
+# acm -> dns -> alb -> acm). Même approche que modules/dns/main.tf.
+data "aws_route53_zone" "this" {
+  name         = var.hosted_zone_name
+  private_zone = false
+}
+
 resource "aws_acm_certificate" "this" {
   domain_name               = var.domain_name
   subject_alternative_names = var.subject_alternative_names
@@ -32,14 +40,14 @@ resource "aws_acm_certificate" "this" {
 resource "aws_route53_record" "validation" {
   for_each = {
     for dvo in aws_acm_certificate.this.domain_validation_options :
-    dvo.resource_record_name => {
+    dvo.domain_name => {
       name   = dvo.resource_record_name
       type   = dvo.resource_record_type
       record = dvo.resource_record_value
     }
   }
 
-  zone_id         = var.zone_id
+  zone_id         = data.aws_route53_zone.this.zone_id
   name            = each.value.name
   type            = each.value.type
   records         = [each.value.record]

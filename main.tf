@@ -72,27 +72,20 @@ module "logging" {
 }
 
 # ============================================================
-# Exposition : DNS, certificat, ALB, WAF
+# Exposition : certificat, ALB, WAF, DNS
+#
+# Ordre du graphe : acm -> alb -> { dns, waf }
+# Le module acm lit la zone lui-même (data) au lieu de recevoir
+# module.dns.zone_id : sinon dns -> alb -> acm -> dns formerait un cycle.
 # ============================================================
-# Zone Route 53 créée par Terraform, puis déléguée depuis GoDaddy.
-# L'alias A pointe sur l'ALB ; les 4 serveurs de noms sortent en output.
-module "dns" {
-  source                  = "./modules/dns"
-  create_zone             = var.create_hosted_zone
-  hosted_zone_name        = var.hosted_zone_name
-  domain_name             = var.domain_name
-  additional_domain_names = var.additional_domain_names
-  alb_dns_name            = module.alb.dns_name
-  alb_zone_id             = module.alb.zone_id
-}
 
-# Certificat TLS public, validé par DNS dans la zone ci-dessus.
+# Certificat TLS public, validé par DNS dans la zone hébergée.
 # Doit être dans la même région que l'ALB (eu-west-3).
 module "acm" {
   source                    = "./modules/acm"
+  hosted_zone_name          = var.hosted_zone_name
   domain_name               = var.domain_name
   subject_alternative_names = var.additional_domain_names
-  zone_id                   = module.dns.zone_id
 }
 
 module "alb" {
@@ -103,18 +96,30 @@ module "alb" {
   alb_sg_id            = module.vpc.alb_sg_id
   certificate_arn      = module.acm.certificate_arn
   logs_bucket          = module.logging.bucket_id
-  waf_web_acl_arn      = module.waf.web_acl_arn
   ssl_policy           = var.alb_ssl_policy
   backend_health_path  = var.backend_health_path
   enable_http_redirect = var.enable_http_redirect
 }
 
+# Le web ACL est associé à l'ALB depuis ce module (aws_wafv2_web_acl_association).
 module "waf" {
   source          = "./modules/waf"
   name            = local.name
   alb_arn         = module.alb.alb_arn
   logs_bucket_arn = module.logging.bucket_arn
   api_rate_limit  = var.waf_api_rate_limit
+}
+
+# Alias A du domaine public vers l'ALB.
+# Les 4 serveurs de noms de la zone sortent en output pour GoDaddy.
+module "dns" {
+  source                  = "./modules/dns"
+  create_zone             = var.create_hosted_zone
+  hosted_zone_name        = var.hosted_zone_name
+  domain_name             = var.domain_name
+  additional_domain_names = var.additional_domain_names
+  alb_dns_name            = module.alb.dns_name
+  alb_zone_id             = module.alb.zone_id
 }
 
 # ============================================================

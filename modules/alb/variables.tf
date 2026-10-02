@@ -10,8 +10,9 @@ variable "certificate_arn" {
 }
 
 variable "waf_web_acl_arn" {
-  description = "Web ACL WAF associée à l'ALB"
+  description = "Non utilise : l'association WAF est portee par modules/waf (evite le cycle alb -> waf -> alb)."
   type        = string
+  default     = null
 }
 
 variable "ssl_policy" {
