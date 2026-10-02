@@ -27,3 +27,7 @@ checkov-results/
 checkov-results/
 
 checkov-results/
+
+# Aucun secret dans ce fichier : domaine, bucket, email uniquement.
+# Les secrets vivent dans SSM et Secrets Manager.
+!terraform.tfvars
