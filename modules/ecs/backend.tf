@@ -22,6 +22,9 @@ resource "aws_ecs_task_definition" "backend" {
     environment = [
       { name = "NODE_ENV", value = "production" },
       { name = "PORT", value = "3000" },
+      # Origine autorisée par le CORS du backend : le domaine public en HTTPS
+      { name = "FRONTEND_URL", value = var.app_url },
+      { name = "APP_URL", value = var.app_url },
       { name = "DOCDB_HOST", value = var.docdb_endpoint },
       { name = "DOCDB_READER_HOST", value = var.docdb_reader_endpoint },
       { name = "DOCDB_PORT", value = "27017" },

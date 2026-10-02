@@ -31,7 +31,10 @@ variable "sandbox_sg_id" { type = string }
 # ---------- ALB ----------
 variable "frontend_target_group_arn" { type = string }
 variable "backend_target_group_arn" { type = string }
-
+variable "app_url" {
+  description = "URL publique de l'application (https://app.mondomaine.com) - origine CORS du backend"
+  type        = string
+}
 # ---------- Dimensionnement ----------
 variable "frontend_desired_count" {
   type    = number

@@ -1,5 +1,4 @@
-# ALB public en HTTP (sans nom de domaine ni certificat)
-# Accès : http://<dns_name de l'ALB>   -  Shield Standard protège automatiquement l'ALB
+# Shield Standard protège automatiquement l'ALB (aucune ressource nécessaire)
 resource "aws_lb" "this" {
   name                       = "${var.name}-alb"
   load_balancer_type         = "application"
@@ -50,11 +49,16 @@ resource "aws_lb_target_group" "backend" {
   }
 }
 
-# Port 80 : « / » -> frontend
-resource "aws_lb_listener" "http" {
+# ============================================================
+# Unique listener servant du contenu : HTTPS 443, certificat ACM
+# « / » -> frontend
+# ============================================================
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.this.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = var.ssl_policy
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
@@ -64,7 +68,7 @@ resource "aws_lb_listener" "http" {
 
 # « /api/* » -> backend
 resource "aws_lb_listener_rule" "api" {
-  listener_arn = aws_lb_listener.http.arn
+  listener_arn = aws_lb_listener.https.arn
   priority     = 10
 
   action {
@@ -77,4 +81,36 @@ resource "aws_lb_listener_rule" "api" {
       values = ["/api/*"]
     }
   }
+}
+
+# ============================================================
+# Port 80 — désactivé par défaut (enable_http_redirect = false)
+#
+#   false : aucun listener 80, le port n'est pas ouvert dans le SG.
+#           Une URL en http:// n'aboutit pas du tout. HTTPS strict.
+#   true  : listener 80 qui ne sert rien et renvoie un 301 vers 443.
+#           Pratique en démo : taper « mondomaine.com » sans https://
+#           fonctionne quand même.
+# ============================================================
+resource "aws_lb_listener" "http_redirect" {
+  count = var.enable_http_redirect ? 1 : 0
+
+  load_balancer_arn = aws_lb.this.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+# Protection WAF de l'ALB
+resource "aws_wafv2_web_acl_association" "this" {
+  resource_arn = aws_lb.this.arn
+  web_acl_arn  = var.waf_web_acl_arn
 }

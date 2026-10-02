@@ -53,14 +53,15 @@ module "kms" {
 }
 
 module "vpc" {
-  source             = "./modules/vpc"
-  name               = local.name
-  region             = var.region
-  vpc_cidr           = var.vpc_cidr
-  azs                = local.azs
-  kms_key_arn        = module.kms.key_arn
-  log_retention_days = var.log_retention_days
-  sandbox_port       = var.sandbox_port
+  source               = "./modules/vpc"
+  name                 = local.name
+  region               = var.region
+  vpc_cidr             = var.vpc_cidr
+  azs                  = local.azs
+  kms_key_arn          = module.kms.key_arn
+  log_retention_days   = var.log_retention_days
+  sandbox_port         = var.sandbox_port
+  enable_http_redirect = var.enable_http_redirect
 }
 
 module "logging" {
@@ -73,17 +74,41 @@ module "logging" {
 # ============================================================
 # Exposition : DNS, certificat, ALB, WAF
 # ============================================================
+# Zone Route 53 créée par Terraform, puis déléguée depuis GoDaddy.
+# L'alias A pointe sur l'ALB ; les 4 serveurs de noms sortent en output.
+module "dns" {
+  source                  = "./modules/dns"
+  create_zone             = var.create_hosted_zone
+  hosted_zone_name        = var.hosted_zone_name
+  domain_name             = var.domain_name
+  additional_domain_names = var.additional_domain_names
+  alb_dns_name            = module.alb.dns_name
+  alb_zone_id             = module.alb.zone_id
+}
 
+# Certificat TLS public, validé par DNS dans la zone ci-dessus.
+# Doit être dans la même région que l'ALB (eu-west-3).
+module "acm" {
+  source                    = "./modules/acm"
+  domain_name               = var.domain_name
+  subject_alternative_names = var.additional_domain_names
+  zone_id                   = module.dns.zone_id
+}
 
 module "alb" {
-  source              = "./modules/alb"
-  name                = local.name
-  vpc_id              = module.vpc.vpc_id
-  public_subnet_ids   = module.vpc.public_subnet_ids
-  alb_sg_id           = module.vpc.alb_sg_id
-  logs_bucket         = module.logging.bucket_id
-  backend_health_path = var.backend_health_path
+  source               = "./modules/alb"
+  name                 = local.name
+  vpc_id               = module.vpc.vpc_id
+  public_subnet_ids    = module.vpc.public_subnet_ids
+  alb_sg_id            = module.vpc.alb_sg_id
+  certificate_arn      = module.acm.certificate_arn
+  logs_bucket          = module.logging.bucket_id
+  waf_web_acl_arn      = module.waf.web_acl_arn
+  ssl_policy           = var.alb_ssl_policy
+  backend_health_path  = var.backend_health_path
+  enable_http_redirect = var.enable_http_redirect
 }
+
 module "waf" {
   source          = "./modules/waf"
   name            = local.name
@@ -140,6 +165,9 @@ module "ecs" {
 
   frontend_target_group_arn = module.alb.frontend_target_group_arn
   backend_target_group_arn  = module.alb.backend_target_group_arn
+
+  # Origine autorisée par le CORS du backend : le domaine public en HTTPS
+  app_url = "https://${var.domain_name}"
 
   frontend_desired_count = var.frontend_desired_count
   backend_min_count      = var.backend_min_count

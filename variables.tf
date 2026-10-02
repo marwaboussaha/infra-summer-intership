@@ -21,20 +21,41 @@ variable "vpc_cidr" {
 }
 
 # ---------- DNS / TLS ----------
+# Le domaine est enregistré chez GoDaddy. Terraform crée la zone Route 53,
+# renvoie les 4 serveurs de noms (output route53_name_servers), et c'est
+# toi qui les saisis chez GoDaddy pour déléguer la résolution DNS à AWS.
 variable "hosted_zone_name" {
-  description = "Zone Route 53 publique existante (ex: voicecraft.fr)"
+  description = "Domaine racine acheté chez GoDaddy (ex: voicecraft-pfe.com)"
   type        = string
+}
+
+variable "create_hosted_zone" {
+  description = "true = Terraform crée la zone Route 53 (cas GoDaddy) ; false = elle existe déjà"
+  type        = bool
+  default     = true
 }
 
 variable "domain_name" {
-  description = "Domaine de l'application (ex: app.voicecraft.fr)"
+  description = "Domaine servi par l'application (ex: app.voicecraft-pfe.com)"
   type        = string
 }
 
+variable "additional_domain_names" {
+  description = "Noms supplémentaires pointant vers l'ALB et couverts par le certificat ACM"
+  type        = list(string)
+  default     = []
+}
+
 variable "alb_ssl_policy" {
-  description = "ELBSecurityPolicy-TLS13-1-3-2021-06 pour TLS 1.3 uniquement"
+  description = "Politique TLS du listener 443"
   type        = string
   default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+}
+
+variable "enable_http_redirect" {
+  description = "false = HTTPS strict, aucun port 80 ; true = port 80 qui redirige en 301 vers 443"
+  type        = bool
+  default     = false
 }
 
 variable "waf_api_rate_limit" {

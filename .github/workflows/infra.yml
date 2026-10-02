@@ -39,9 +39,17 @@ env:
   TF_IN_AUTOMATION: "true"
 
   # Terraform variables (Settings > Secrets and variables > Actions > Variables)
+  #
+  # Rappel de precedence Terraform : terraform.tfvars l'emporte sur les
+  # variables d'environnement TF_VAR_*. Si terraform.tfvars est commite avec
+  # le domaine, les variables GitHub ci-dessous ne sont qu'un filet de
+  # securite. Pour piloter depuis GitHub, supprimer terraform.tfvars.
   TF_VAR_image_tag: ${{ github.event.inputs.image_tag || github.event.client_payload.image_tag || vars.IMAGE_TAG || 'bootstrap' }}
   TF_VAR_hosted_zone_name: ${{ vars.HOSTED_ZONE_NAME }}
   TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
+  TF_VAR_create_hosted_zone: ${{ vars.CREATE_HOSTED_ZONE || 'true' }}
+  TF_VAR_additional_domain_names: ${{ vars.ADDITIONAL_DOMAIN_NAMES || '[]' }}
+  TF_VAR_enable_http_redirect: ${{ vars.ENABLE_HTTP_REDIRECT || 'false' }}
   TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}
   TF_VAR_tf_state_bucket: ${{ vars.TF_STATE_BUCKET }}
   TF_VAR_github_repositories: ${{ vars.DEPLOY_REPOSITORIES || format('["{0}"]', github.repository) }}
@@ -288,6 +296,10 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.apply && github.ref == 'refs/heads/main' && needs.validate-and-plan.outputs.plan_exitcode == '2'
     environment: production # required reviewers = manual approval
 
+    # La validation ACM attend la delegation NS chez GoDaddy : jusqu'a 45 min.
+    # Sans cette limite, un runner resterait bloque 6 h (defaut GitHub).
+    timeout-minutes: 90
+
     permissions:
       contents: read
       id-token: write
@@ -310,6 +322,7 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          role-duration-seconds: 7200
 
       - name: Terraform init
         run: terraform init -input=false
@@ -321,15 +334,40 @@ jobs:
           path: .
 
       - name: Terraform apply
-        run: terraform apply -input=false -lock-timeout=5m -auto-approve tfplan
+        run: terraform apply -input=false -lock-timeout=5m tfplan
+
+      # always() : au premier apply, la validation ACM echoue tant que les
+      # serveurs de noms ne sont pas saisis chez GoDaddy. La zone Route 53 est
+      # pourtant deja creee, donc les NS sont lisibles et doivent s'afficher
+      # meme quand l'apply a echoue -- c'est tout l'interet de cette etape.
+      - name: Nameservers to set at GoDaddy
+        if: always()
+        continue-on-error: true
+        run: |
+          NS="$(terraform output -json route53_name_servers 2>/dev/null | jq -r '.[]' || true)"
+          if [ -z "${NS}" ]; then
+            echo "Zone Route 53 pas encore creee - relancer l'apply."
+            exit 0
+          fi
+          {
+            echo "### Nameservers a saisir chez GoDaddy"
+            echo ""
+            echo "GoDaddy -> My Products -> voicecraft-plateform.website -> DNS"
+            echo "-> Nameservers -> Change -> I'll use my own nameservers"
+            echo ""
+            echo '```'
+            echo "${NS}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "${NS}"
 
       - name: Output application URL
         run: |
-          terraform output alb_dns_name
           {
             echo "### Deployment finished"
             echo "- Application: $(terraform output -raw app_url)"
             echo "- ALB: $(terraform output -raw alb_dns_name)"
+            echo "- Certificat ACM: $(terraform output -raw acm_certificate_arn)"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Email apply result
@@ -348,5 +386,10 @@ jobs:
           body: |
             Terraform apply finished with status: ${{ job.status }}
             Commit: ${{ github.sha }}
+
+            Si le statut est "failure" sur aws_acm_certificate_validation :
+            c'est attendu au premier apply. La zone Route 53 vient d'etre creee,
+            les 4 serveurs de noms sont dans le resume du run. Les saisir chez
+            GoDaddy, attendre la propagation, puis relancer l'apply.
 
             Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

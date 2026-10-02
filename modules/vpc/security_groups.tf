@@ -47,7 +47,11 @@ resource "aws_vpc_security_group_ingress_rule" "alb_https" {
   description       = "HTTPS Internet"
 }
 
+# Port 80 ouvert uniquement si la redirection 301 est activée.
+# Par défaut (enable_http_redirect = false) le port reste fermé : HTTPS strict.
 resource "aws_vpc_security_group_ingress_rule" "alb_http" {
+  count = var.enable_http_redirect ? 1 : 0
+
   security_group_id = aws_security_group.alb.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "tcp"
