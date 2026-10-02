@@ -203,31 +203,11 @@ jobs:
         run: terraform validate
 
       # Next steps run only when the AWS account is ready (AWS_DEPLOY_ROLE_ARN set)
-      # "Request ARN is invalid" = la valeur de AWS_DEPLOY_ROLE_ARN est mal
-      # formee (espace, guillemets, retour a la ligne, ARN incomplet...).
-      # Ce step nettoie la valeur et verifie son format avant l'appel STS.
-      - name: Verify AWS role ARN
-        id: role
-        if: env.AWS_READY == 'true'
-        env:
-          RAW_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
-        run: |
-          ARN="$(printf '%s' "$RAW_ARN" | tr -d '[:space:]"'"'"'')"
-          if ! [[ "$ARN" =~ ^arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_/-]+$ ]]; then
-            echo "::error::AWS_DEPLOY_ROLE_ARN invalide (longueur ${#ARN}). Attendu : arn:aws:iam::<12 chiffres>:role/<nom>, ex. arn:aws:iam::636361171302:role/voicecraft-prod-github-deploy"
-            exit 1
-          fi
-          if [ "$ARN" != "$RAW_ARN" ]; then
-            echo "::warning::AWS_DEPLOY_ROLE_ARN contenait des espaces/guillemets : corriger la variable dans Settings."
-          fi
-          echo "Role : $ARN"
-          echo "arn=$ARN" >> "$GITHUB_OUTPUT"
-
       - name: Configure AWS credentials (OIDC)
         if: env.AWS_READY == 'true'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ steps.role.outputs.arn }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform init (S3 backend)
@@ -337,29 +317,10 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: false
 
-      # "Request ARN is invalid" = la valeur de AWS_DEPLOY_ROLE_ARN est mal
-      # formee (espace, guillemets, retour a la ligne, ARN incomplet...).
-      # Ce step nettoie la valeur et verifie son format avant l'appel STS.
-      - name: Verify AWS role ARN
-        id: role
-        env:
-          RAW_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
-        run: |
-          ARN="$(printf '%s' "$RAW_ARN" | tr -d '[:space:]"'"'"'')"
-          if ! [[ "$ARN" =~ ^arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_/-]+$ ]]; then
-            echo "::error::AWS_DEPLOY_ROLE_ARN invalide (longueur ${#ARN}). Attendu : arn:aws:iam::<12 chiffres>:role/<nom>, ex. arn:aws:iam::636361171302:role/voicecraft-prod-github-deploy"
-            exit 1
-          fi
-          if [ "$ARN" != "$RAW_ARN" ]; then
-            echo "::warning::AWS_DEPLOY_ROLE_ARN contenait des espaces/guillemets : corriger la variable dans Settings."
-          fi
-          echo "Role : $ARN"
-          echo "arn=$ARN" >> "$GITHUB_OUTPUT"
-
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ steps.role.outputs.arn }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
           role-duration-seconds: 7200
 
