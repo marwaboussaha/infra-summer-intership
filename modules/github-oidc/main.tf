@@ -9,13 +9,31 @@ resource "aws_iam_openid_connect_provider" "github" {
 locals {
   oidc_arn = var.create_oidc_provider ? aws_iam_openid_connect_provider.github[0].arn : "arn:aws:iam::${var.account_id}:oidc-provider/token.actions.githubusercontent.com"
 
-  # Branche main seule, ou environnement "production" (restreint à main côté GitHub)
-  allowed_subjects = flatten([
-    for repo in var.github_repositories : [
-      "repo:${repo}:ref:refs/heads/main",
-      "repo:${repo}:environment:production",
-    ]
-  ])
+  # Motif large : n'importe quelle branche, tag, environnement ou PR du depot.
+  # Moins strict que la liste exacte de sujets, mais insensible au type
+  # d'evenement qui declenche le workflow. A resserrer une fois le pipeline
+  # stabilise, en revenant a StringEquals sur les sujets precis.
+  allowed_subjects = [for repo in var.github_repositories : "repo:${repo}:*"]
+}
+
+data "aws_iam_policy_document" "assume" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = [local.oidc_arn]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = local.allowed_subjects
+    }
+  }
 }
 
 data "aws_iam_policy_document" "assume" {
