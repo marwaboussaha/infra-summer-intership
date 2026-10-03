@@ -202,6 +202,17 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
+      # Diagnostic OIDC : compare l'ARN fourni par la variable de depot avec
+      # l'ARN reel du role, et affiche le "sub" que GitHub va presenter a AWS.
+      # Les crochets rendent visible une valeur vide ou un espace parasite.
+      # A retirer une fois le probleme d'authentification resolu.
+      - name: Debug role ARN
+        run: |
+          echo "ARN recu    = [${{ vars.AWS_DEPLOY_ROLE_ARN }}]"
+          echo "ARN attendu = [arn:aws:iam::636361171302:role/voicecraft-prod-github-deploy]"
+          echo "sub presente= repo:${{ github.repository }}:ref:${{ github.ref }}"
+          echo "event       = ${{ github.event_name }}"
+
       # Next steps run only when the AWS account is ready (AWS_DEPLOY_ROLE_ARN set)
       - name: Configure AWS credentials (OIDC)
         if: env.AWS_READY == 'true'
