@@ -1,0 +1,14 @@
+warning: in the working copy of 'modules/docdb/main.tf', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/modules/docdb/main.tf b/modules/docdb/main.tf[m
+[1mindex 390a53c..6b9bb7b 100644[m
+[1m--- a/modules/docdb/main.tf[m
+[1m+++ b/modules/docdb/main.tf[m
+[36m@@ -59,7 +59,6 @@[m [mresource "aws_docdb_cluster_instance" "this" {[m
+   identifier                 = "${var.name}-docdb-${count.index}"[m
+   cluster_identifier         = aws_docdb_cluster.this.id[m
+   instance_class             = var.instance_class[m
+[31m-  availability_zone          = var.azs[count.index][m
+   promotion_tier             = count.index[m
+   auto_minor_version_upgrade = true[m
+ }[m
+\ No newline at end of file[m

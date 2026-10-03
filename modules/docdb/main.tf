@@ -59,7 +59,6 @@ resource "aws_docdb_cluster_instance" "this" {
   identifier                 = "${var.name}-docdb-${count.index}"
   cluster_identifier         = aws_docdb_cluster.this.id
   instance_class             = var.instance_class
-  availability_zone          = var.azs[count.index]
   promotion_tier             = count.index
   auto_minor_version_upgrade = true
 }
