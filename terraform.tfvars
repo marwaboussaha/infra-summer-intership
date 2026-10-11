@@ -1,7 +1,7 @@
-hosted_zone_name             = "voicecraft-plateform.website"
-domain_name                  = "app.voicecraft-plateform.website"
-alert_email                  = "marwamarwa3a2@gmail.com"
-tf_state_bucket              = "voicecraft-tfstate-636361171302"
+hosted_zone_name = "voicecraft-plateform.website"
+domain_name      = "app.voicecraft-plateform.website"
+alert_email      = "marwamarwa3a2@gmail.com"
+tf_state_bucket  = "voicecraft-tfstate-636361171302"
 github_repositories = [
   "marwaboussaha/summer-intership",
   "marwaboussaha/infra-summer-intership"
