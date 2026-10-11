@@ -2,8 +2,10 @@ hosted_zone_name             = "voicecraft-plateform.website"
 domain_name                  = "app.voicecraft-plateform.website"
 alert_email                  = "marwamarwa3a2@gmail.com"
 tf_state_bucket              = "voicecraft-tfstate-636361171302"
-github_repositories          = ["marwaboussaha/infra-summer-intership"]
-image_tag                    = "6f8a3ed"
+github_repositories = [
+  "marwaboussaha/summer-intership",
+  "marwaboussaha/infra-summer-intership"
+]
 github_terraform_policy_arns = ["arn:aws:iam::aws:policy/AdministratorAccess"]
 create_hosted_zone           = true
 enable_http_redirect         = false
