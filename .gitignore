@@ -31,3 +31,15 @@ checkov-results/
 # Aucun secret dans ce fichier : domaine, bucket, email uniquement.
 # Les secrets vivent dans SSM et Secrets Manager.
 !terraform.tfvars
+
+delete-batch.json
+images-tmp.json
+trust-policy-*.json
+*-ids.json
+
+trust.json
+
+delete-batch.json
+images-tmp.json
+trust-policy-*.json
+*-ids.json

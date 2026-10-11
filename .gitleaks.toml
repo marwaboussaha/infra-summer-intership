@@ -1,0 +1,13 @@
+title = "VoiceCraft gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Faux positifs: fichiers temporaires S3/ECR (VersionId), pas des secrets"
+paths = [
+  '''delete-batch\.json''',
+  '''images-tmp\.json''',
+  '''.*-ids\.json''',
+  '''trust-policy-.*\.json''',
+]
