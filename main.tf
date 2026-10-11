@@ -159,7 +159,7 @@ module "ecs" {
   log_retention_days = var.log_retention_days
 
   repository_urls  = module.ecr.repository_urls
-  image_tag        = var.image_tag
+  image_tag        = replace(var.image_tag, "/[^A-Za-z0-9._-]/", "")
   cpu_architecture = var.cpu_architecture
 
   app_subnet_ids     = module.vpc.app_subnet_ids

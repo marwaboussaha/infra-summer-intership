@@ -70,11 +70,14 @@ variable "ecr_repositories" {
   default     = ["frontend", "backend", "sandbox", "worker"]
 }
 
-variable "image_tag" {
-  description = "Tag immuable (SHA du commit applicatif), injecté par la CI"
-  type        = string
-}
 
+variable "image_tag" {
+  type = string
+  validation {
+    condition     = length(replace(var.image_tag, "/[^A-Za-z0-9._-]/", "")) > 0
+    error_message = "image_tag est vide ou ne contient que des caractères invalides."
+  }
+}
 variable "cpu_architecture" {
   type    = string
   default = "X86_64"
