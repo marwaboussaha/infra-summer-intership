@@ -65,7 +65,8 @@ resource "aws_wafv2_web_acl" "this" {
           # Le corps des requêtes /api/generate (image en base64) dépasse 8 Ko :
           # la règle SizeRestrictions_BODY passe en mode comptage.
           dynamic "rule_action_override" {
-            for_each = rule.key == "AWSManagedRulesCommonRuleSet" ? ["SizeRestrictions_BODY"] : []
+            for_each = rule.key == "AWSManagedRulesCommonRuleSet" ? ["SizeRestrictions_BODY", "CrossSiteScripting_BODY"] : []
+  
 
             content {
               name = rule_action_override.value
